@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0B0F1A;
+    color: white;
+}
+
+
+/* Layout */
+
+.dashboard {
+    display: flex;
+    height: 100vh;
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    width: 220px;
+    background: #111827;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    color: #6C63FF;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 12px;
+    cursor: pointer;
+    color: #aaa;
+    border-radius: 6px;
+}
+
+.sidebar li:hover {
+    background: #6C63FF;
+    color: white;
+}
+
+
+/* Main */
+
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+
+/* Cards */
+
+.card {
+    background: #111827;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+}

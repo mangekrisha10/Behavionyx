@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Behavionyx Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body>
+
+    <div class="dashboard">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Behavionyx</h2>
+            <ul>
+                <li onclick="loadPage('overview')">Overview</li>
+                <li onclick="loadPage('behavior')">Behavior Analysis</li>
+                <li onclick="loadPage('risk')">Risk Reports</li>
+                <li onclick="loadPage('activity')">User Activity</li>
+                <li onclick="logout()">Logout</li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main" id="mainContent">
+            <h1>Welcome to Dashboard</h1>
+            <p>Select a feature from sidebar</p>
+        </div>
+
+    </div>
+
+    <script src="dashboard.js"></script>
+
+</body>
+
+</html>

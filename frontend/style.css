@@ -1,0 +1,218 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #0B0F1A;
+    color: white;
+}
+
+
+/* Layout */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+
+/* Logo */
+
+.logo {
+    font-size: 32px;
+    color: #6C63FF;
+}
+
+.tagline {
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+
+/* Tabs */
+
+.tabs {
+    position: relative;
+    display: flex;
+    width: 280px;
+    background: #111827;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.tabs span {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+    z-index: 2;
+    color: #aaa;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.tabs span:hover {
+    color: white;
+}
+
+.tabs .active {
+    color: white;
+    font-weight: 500;
+}
+
+
+/* Sliding indicator */
+
+.slider {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background: #6C63FF;
+    border-radius: 8px;
+    top: 0;
+    left: 0;
+    transition: 0.3s;
+}
+
+
+/* Card */
+
+.card {
+    background: #111827;
+    padding: 25px;
+    border-radius: 12px;
+    width: 280px;
+    text-align: center;
+}
+
+
+/* Inputs */
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+
+/* Password box */
+
+.password-box {
+    position: relative;
+    width: 100%;
+}
+
+.password-box input {
+    padding-right: 35px;
+}
+
+
+/* Clean small eye icon */
+
+.toggle-eye {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+
+/* Eye outline */
+
+.toggle-eye::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 10px;
+    border: 2px solid #aaa;
+    border-radius: 10px;
+    top: 4px;
+}
+
+
+/* Eye pupil */
+
+.toggle-eye::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #aaa;
+    border-radius: 50%;
+    top: 7px;
+    left: 6px;
+}
+
+
+/* Hover effect */
+
+.toggle-eye:hover::before {
+    border-color: white;
+}
+
+.toggle-eye:hover::after {
+    background: white;
+}
+
+
+/* Button */
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background: #6C63FF;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #574fd6;
+}
+
+
+/* Footer */
+
+.note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #777;
+}
+
+
+/* Common input box */
+
+.input-box {
+    position: relative;
+    width: 100%;
+}
+
+
+/* Make ALL inputs same */
+
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    padding-right: 35px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-box {
+    margin-bottom: 5px;
+}
