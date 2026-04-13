@@ -76,3 +76,13 @@ function loadChart() {
 function logout() {
     window.location.href = "index.html";
 }
+
+function checkRiskAlert() {
+    let risk = Math.floor(Math.random() * 100);
+
+    if (risk > 70) {
+        let alertBox = document.getElementById("alertBox");
+        alertBox.innerText = "⚠️ High Risk Activity Detected!";
+        alertBox.classList.remove("hidden");
+    }
+}

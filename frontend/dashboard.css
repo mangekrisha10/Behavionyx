@@ -1,8 +1,18 @@
-body {
+/* Reset */
+
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Body */
+
+body {
     font-family: 'Segoe UI', sans-serif;
-    background: #0B0F1A;
-    color: white;
+    background: #f6f8fb;
+    color: #333;
 }
 
 
@@ -17,30 +27,58 @@ body {
 /* Sidebar */
 
 .sidebar {
-    width: 220px;
-    background: #111827;
+    width: 230px;
+    background: #ffffff;
     padding: 20px;
+    border-right: 1px solid #eee;
 }
 
 .sidebar h2 {
-    color: #6C63FF;
+    margin-bottom: 30px;
+    font-size: 20px;
+    color: #4a6cf7;
 }
+
+
+/* Sidebar list */
 
 .sidebar ul {
     list-style: none;
-    padding: 0;
 }
 
-.sidebar li {
-    padding: 12px;
+
+/* Links */
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+
+/* Items */
+
+.sidebar ul li {
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
     cursor: pointer;
-    color: #aaa;
-    border-radius: 6px;
+    transition: 0.2s;
 }
 
-.sidebar li:hover {
-    background: #6C63FF;
-    color: white;
+
+/* Hover */
+
+.sidebar ul li:hover {
+    background: #f2f5ff;
+}
+
+
+/* Active */
+
+.sidebar ul li.active {
+    background: #e8edff;
+    color: #4a6cf7;
 }
 
 
@@ -48,15 +86,71 @@ body {
 
 .main {
     flex: 1;
-    padding: 20px;
+    padding: 30px;
+}
+
+
+/* Topbar */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.topbar input {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    width: 200px;
+}
+
+
+/* Profile */
+
+.profile {
+    background: #e8edff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+
+/* Heading */
+
+.main h1 {
+    margin-bottom: 20px;
 }
 
 
 /* Cards */
 
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+
+/* Card */
+
 .card {
-    background: #111827;
+    background: #ffffff;
     padding: 20px;
-    border-radius: 10px;
-    margin: 10px 0;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Card text */
+
+.card h3 {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
 }

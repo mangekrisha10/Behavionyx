@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Behavior Analysis - Behavionyx</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            margin: 0;
+            background: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 240px;
+            background: #1e293b;
+            color: white;
+            padding: 20px;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 30px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar li {
+            margin: 18px 0;
+        }
+        
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+        }
+        
+        .sidebar .active a {
+            color: #38bdf8;
+            font-weight: bold;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .sub {
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        
+        .big-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 10px 0;
+        }
+        
+        .safe {
+            color: #16a34a;
+            font-weight: 600;
+        }
+        
+        .medium {
+            color: #d97706;
+            font-weight: 600;
+        }
+        
+        .danger {
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .arena {
+            position: relative;
+            height: 320px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        .target {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+            transition: transform 0.15s ease;
+        }
+        
+        .target:hover {
+            transform: scale(1.08);
+        }
+        
+        .stats p {
+            margin: 8px 0;
+        }
+        
+        .challenge-text {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            outline: none;
+            font-size: 15px;
+        }
+        
+        textarea:focus {
+            border-color: #93c5fd;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.10);
+        }
+        
+        button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-top: 12px;
+        }
+        
+        button:hover {
+            background: #1d4ed8;
+        }
+        
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+        
+        .status-line {
+            margin-top: 8px;
+            color: #475569;
+        }
+        
+        .reaction-box {
+            height: 180px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 22px;
+            user-select: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+            background: #e2e8f0;
+            color: #334155;
+            text-align: center;
+            padding: 12px;
+        }
+        
+        .waiting {
+            background: #facc15;
+            color: #1e293b;
+        }
+        
+        .too-soon {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .cue-green {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .cue-blue {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .cue-purple {
+            background: #8b5cf6;
+            color: white;
+        }
+        
+        .cue-orange {
+            background: #f97316;
+            color: white;
+        }
+        
+        .cue-pink {
+            background: #ec4899;
+            color: white;
+        }
+        
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Behavionyx</h2>
+            <ul>
+                <li><a href="dashboard.html">Overview</a></li>
+                <li class="active"><a href="behavior.html">Behavior Analysis</a></li>
+                <li><a href="risk.html">Risk Reports</a></li>
+                <li><a href="activity.html">User Activity</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <h1>Behavior Analysis Lab</h1>
+            <p class="sub">Interactive human behavior tracking using mouse movement, typing rhythm, and reaction timing.</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🖱️ Mouse Challenge</h3>
+                    <p>Click all moving targets inside the arena. Your speed, movement smoothness, and activity will be analyzed.</p>
+
+                    <div class="arena" id="arena">
+                        <div class="target" id="target"></div>
+                    </div>
+
+                    <button onclick="startMouseChallenge()">Start Mouse Challenge</button>
+
+                    <div class="stats">
+                        <p><strong>Targets Hit:</strong> <span id="targetsHit">0</span></p>
+                        <p><strong>Time Taken:</strong> <span id="mouseTime">0.0 s</span></p>
+                        <p><strong>Mouse Distance:</strong> <span id="mouseDistance">0 px</span></p>
+                        <p><strong>Average Mouse Speed:</strong> <span id="mouseSpeed">0 px/s</span></p>
+                        <p><strong>Movement Pattern:</strong> <span id="mousePattern">Not started</span></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⌨️ Typing Challenge</h3>
+                    <p>Type the sentence below as naturally as possible. The sentence changes every refresh.</p>
+
+                    <div class="challenge-text" id="challengeText"></div>
+                    <textarea id="typingInput" placeholder="Type the sentence here..."></textarea>
+                    <br>
+                    <button onclick="startTypingChallenge()">Start Typing Challenge</button>
+                    <button onclick="finishTypingChallenge()">Finish Typing Test</button>
+
+                    <div class="stats">
+                        <p><strong>Typing Speed:</strong> <span id="typingSpeed">0 WPM</span></p>
+                        <p><strong>Average Key Delay:</strong> <span id="avgDelay">0 ms</span></p>
+                        <p><strong>Backspaces:</strong> <span id="backspaceCount">0</span></p>
+                        <p><strong>Mistakes:</strong> <span id="mistakeCount">0</span></p>
+                        <p><strong>Typing Pattern:</strong> <span id="typingPattern">Not started</span></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⚡ Reaction Challenge</h3>
+                    <p>Wait for the box to change into a random signal, then click as fast as possible.</p>
+
+                    <div id="reactionBox" class="reaction-box">Click Start</div>
+                    <button onclick="startReactionChallenge()">Start Reaction Challenge</button>
+
+                    <div class="stats">
+                        <p><strong>Reaction Time:</strong> <span id="reactionTime">0 ms</span></p>
+                        <p><strong>Reaction Pattern:</strong> <span id="reactionPattern">Not started</span></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>🧠 Human Behavior Score</h3>
+                    <div class="big-score" id="humanScore">0</div>
+                    <p><strong>Status:</strong> <span id="humanStatus">Waiting for analysis</span></p>
+                    <p><strong>Bot Likelihood:</strong> <span id="botLikelihoodText">0</span>%</p>
+                    <p class="status-line">This score combines mouse behavior, typing rhythm, corrections, and reaction timing.</p>
+                    <button onclick="generateFinalAnalysis()">Generate Final Analysis</button>
+                </div>
+
+                <div class="card">
+                    <h3>⚠️ Behavior Analysis Findings</h3>
+                    <ul id="behaviorFindings">
+                        <li>Complete all challenges to generate insights.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sentencePool = [
+            "Behavioral biometrics helps identify users through typing rhythm, mouse movement, and interaction patterns.",
+            "Human users usually make small mistakes, natural pauses, and uneven cursor movements while interacting online.",
+            "Cybersecurity systems can analyze typing speed, click timing, and reaction behavior to detect suspicious sessions.",
+            "A real user often shows natural hesitation, varied timing, and imperfect movement during interactive challenges.",
+            "Bot detection becomes stronger when typing, mouse tracking, and reaction time are analyzed together in real time.",
+            "Security platforms can improve trust decisions by studying how users move, type, react, and correct errors.",
+            "Genuine human interaction often includes corrections, pauses, and slightly unpredictable responses during tests.",
+            "A bot may move too perfectly, react too fast, or type with unnatural timing compared to a real user."
+        ];
+
+        let currentChallengeText = "";
+
+        // Mouse challenge state
+        let mouseTrack = [];
+        let mouseStartTime = null;
+        let mouseEndTime = null;
+        let targetsHit = 0;
+        let mouseChallengeActive = false;
+        let totalMouseDistance = 0;
+        let lastMousePoint = null;
+
+        // Typing challenge state
+        let typingKeyTimes = [];
+        let typingStartTime = null;
+        let typingEndTime = null;
+        let backspaceCount = 0;
+        let mistakeCount = 0;
+        let typingStarted = false;
+
+        // Reaction challenge state
+        let reactionStartTime = null;
+        let reactionTimeout = null;
+        let reactionActive = false;
+        let reactionReady = false;
+        let reactionResult = null;
+        let currentReactionCue = null;
+
+        const reactionCues = [{
+            text: "CLICK NOW!",
+            className: "cue-green"
+        }, {
+            text: "TAP FAST!",
+            className: "cue-blue"
+        }, {
+            text: "HIT NOW!",
+            className: "cue-purple"
+        }, {
+            text: "GO FAST!",
+            className: "cue-orange"
+        }, {
+            text: "PRESS!",
+            className: "cue-pink"
+        }];
+
+        const arena = document.getElementById("arena");
+        const target = document.getElementById("target");
+        const typingInput = document.getElementById("typingInput");
+        const reactionBox = document.getElementById("reactionBox");
+
+        function loadRandomSentence() {
+            const randomIndex = Math.floor(Math.random() * sentencePool.length);
+            currentChallengeText = sentencePool[randomIndex];
+            document.getElementById("challengeText").innerText = currentChallengeText;
+        }
+
+        function randomTargetPosition() {
+            const maxX = arena.clientWidth - 42;
+            const maxY = arena.clientHeight - 42;
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+
+            target.style.left = `${x}px`;
+            target.style.top = `${y}px`;
+        }
+
+        function startMouseChallenge() {
+            mouseTrack = [];
+            mouseStartTime = Date.now();
+            mouseEndTime = null;
+            targetsHit = 0;
+            totalMouseDistance = 0;
+            lastMousePoint = null;
+            mouseChallengeActive = true;
+
+            localStorage.removeItem("mouseChallengeResult");
+
+            document.getElementById("targetsHit").innerText = "0";
+            document.getElementById("mouseTime").innerText = "0.0 s";
+            document.getElementById("mouseDistance").innerText = "0 px";
+            document.getElementById("mouseSpeed").innerText = "0 px/s";
+            document.getElementById("mousePattern").innerText = "Tracking...";
+
+            randomTargetPosition();
+        }
+
+        arena.addEventListener("mousemove", (e) => {
+            if (!mouseChallengeActive) return;
+
+            const rect = arena.getBoundingClientRect();
+            const point = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top,
+                time: Date.now()
+            };
+
+            mouseTrack.push(point);
+
+            if (lastMousePoint) {
+                const dx = point.x - lastMousePoint.x;
+                const dy = point.y - lastMousePoint.y;
+                totalMouseDistance += Math.sqrt(dx * dx + dy * dy);
+            }
+
+            lastMousePoint = point;
+            document.getElementById("mouseDistance").innerText = Math.round(totalMouseDistance) + " px";
+        });
+
+        target.addEventListener("click", () => {
+            if (!mouseChallengeActive) return;
+
+            targetsHit++;
+            document.getElementById("targetsHit").innerText = targetsHit;
+
+            if (targetsHit >= 8) {
+                mouseChallengeActive = false;
+                mouseEndTime = Date.now();
+                analyzeMouseChallenge();
+            } else {
+                randomTargetPosition();
+            }
+        });
+
+        function analyzeMouseChallenge() {
+            if (!mouseStartTime || !mouseEndTime) return;
+
+            const durationSec = (mouseEndTime - mouseStartTime) / 1000;
+            const speed = durationSec > 0 ? totalMouseDistance / durationSec : 0;
+
+            document.getElementById("mouseTime").innerText = durationSec.toFixed(1) + " s";
+            document.getElementById("mouseSpeed").innerText = Math.round(speed) + " px/s";
+
+            let pattern = "Normal";
+            if (speed < 150) {
+                pattern = "Slow Movement";
+            } else if (speed > 1200) {
+                pattern = "Very Fast / Robotic ⚠️";
+            }
+
+            if (mouseTrack.length < 20) {
+                pattern = "Low Activity ⚠️";
+            }
+
+            document.getElementById("mousePattern").innerText = pattern;
+
+            localStorage.setItem("mouseChallengeResult", JSON.stringify({
+                durationSec,
+                speed,
+                totalMouseDistance,
+                targetsHit,
+                pattern,
+                trackPoints: mouseTrack.length
+            }));
+        }
+
+        function startTypingChallenge() {
+            typingInput.value = "";
+            typingKeyTimes = [];
+            typingStartTime = null;
+            typingEndTime = null;
+            backspaceCount = 0;
+            mistakeCount = 0;
+            typingStarted = true;
+
+            localStorage.removeItem("typingChallengeResult");
+
+            document.getElementById("typingSpeed").innerText = "Tracking...";
+            document.getElementById("avgDelay").innerText = "0 ms";
+            document.getElementById("backspaceCount").innerText = "0";
+            document.getElementById("mistakeCount").innerText = "0";
+            document.getElementById("typingPattern").innerText = "Tracking...";
+            typingInput.focus();
+        }
+
+        typingInput.addEventListener("keydown", (e) => {
+            if (!typingStarted) return;
+
+            if (!typingStartTime) {
+                typingStartTime = Date.now();
+            }
+
+            typingKeyTimes.push(Date.now());
+
+            if (e.key === "Backspace") {
+                backspaceCount++;
+                document.getElementById("backspaceCount").innerText = backspaceCount;
+            }
+        });
+
+        typingInput.addEventListener("input", () => {
+            if (!typingStarted) return;
+
+            const typed = typingInput.value;
+            let mistakes = 0;
+
+            for (let i = 0; i < typed.length; i++) {
+                if (typed[i] !== currentChallengeText[i]) {
+                    mistakes++;
+                }
+            }
+
+            mistakeCount = mistakes;
+            document.getElementById("mistakeCount").innerText = mistakeCount;
+        });
+
+        function finishTypingChallenge() {
+            if (!typingStarted || !typingStartTime) {
+                alert("Start the typing challenge first.");
+                return;
+            }
+
+            typingEndTime = Date.now();
+            typingStarted = false;
+
+            const typedText = typingInput.value.trim();
+            const durationMin = (typingEndTime - typingStartTime) / 60000;
+            const words = typedText.length / 5;
+            const wpm = durationMin > 0 ? words / durationMin : 0;
+
+            let avgDelay = 0;
+            if (typingKeyTimes.length > 1) {
+                const intervals = [];
+                for (let i = 1; i < typingKeyTimes.length; i++) {
+                    intervals.push(typingKeyTimes[i] - typingKeyTimes[i - 1]);
+                }
+                avgDelay = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+            }
+
+            let pattern = "Natural";
+            if (wpm > 90 || (avgDelay > 0 && avgDelay < 40)) {
+                pattern = "Too Fast / Suspicious ⚠️";
+            } else if (mistakeCount > 10) {
+                pattern = "Unstable Typing";
+            } else if (backspaceCount === 0 && typedText.length > 40) {
+                pattern = "Overly Perfect ⚠️";
+            }
+
+            document.getElementById("typingSpeed").innerText = Math.round(wpm) + " WPM";
+            document.getElementById("avgDelay").innerText = Math.round(avgDelay) + " ms";
+            document.getElementById("typingPattern").innerText = pattern;
+
+            localStorage.setItem("typingChallengeResult", JSON.stringify({
+                wpm,
+                avgDelay,
+                backspaceCount,
+                mistakeCount,
+                pattern,
+                typedLength: typedText.length
+            }));
+        }
+
+        function startReactionChallenge() {
+            clearTimeout(reactionTimeout);
+            reactionActive = true;
+            reactionReady = false;
+            reactionResult = null;
+            currentReactionCue = null;
+
+            localStorage.removeItem("reactionChallengeResult");
+
+            reactionBox.className = "reaction-box waiting";
+            reactionBox.innerText = "Wait for the signal...";
+            document.getElementById("reactionTime").innerText = "0 ms";
+            document.getElementById("reactionPattern").innerText = "Tracking...";
+
+            const randomDelay = Math.floor(Math.random() * 3000) + 2000;
+
+            reactionTimeout = setTimeout(() => {
+                reactionReady = true;
+                reactionStartTime = Date.now();
+
+                currentReactionCue = reactionCues[Math.floor(Math.random() * reactionCues.length)];
+                reactionBox.className = `reaction-box ${currentReactionCue.className}`;
+                reactionBox.innerText = currentReactionCue.text;
+            }, randomDelay);
+        }
+
+        reactionBox.addEventListener("click", () => {
+            if (!reactionActive) return;
+
+            if (!reactionReady) {
+                clearTimeout(reactionTimeout);
+                reactionBox.className = "reaction-box too-soon";
+                reactionBox.innerText = "Too Soon!";
+                document.getElementById("reactionPattern").innerText = "Jumped Early ⚠️";
+
+                reactionResult = {
+                    reactionMs: 0,
+                    pattern: "Jumped Early ⚠️",
+                    cueText: null
+                };
+
+                localStorage.setItem("reactionChallengeResult", JSON.stringify(reactionResult));
+                reactionActive = false;
+                return;
+            }
+
+            const reactionMs = Date.now() - reactionStartTime;
+            let pattern = "Natural";
+
+            if (reactionMs < 120) {
+                pattern = "Too Fast / Bot-like ⚠️";
+            } else if (reactionMs < 220) {
+                pattern = "Very Sharp";
+            } else if (reactionMs > 700) {
+                pattern = "Slow Reaction";
+            }
+
+            document.getElementById("reactionTime").innerText = reactionMs + " ms";
+            document.getElementById("reactionPattern").innerText = `${pattern} (${currentReactionCue.text})`;
+
+            reactionBox.className = "reaction-box";
+            reactionBox.innerText = "Done";
+
+            reactionResult = {
+                reactionMs,
+                pattern,
+                cueText: currentReactionCue.text
+            };
+
+            localStorage.setItem("reactionChallengeResult", JSON.stringify(reactionResult));
+            reactionActive = false;
+            reactionReady = false;
+        });
+
+        function analyzeMouseBotLikelihood(mouseResult) {
+            let botPoints = 0;
+            const notes = [];
+
+            if (mouseResult.trackPoints < 15) {
+                botPoints += 15;
+                notes.push("Very low mouse tracking points detected");
+            }
+
+            if (mouseResult.speed > 1400) {
+                botPoints += 25;
+                notes.push("Mouse movement speed is unrealistically high");
+            } else if (mouseResult.speed < 80) {
+                botPoints += 10;
+                notes.push("Mouse activity is unusually low");
+            }
+
+            if (mouseResult.durationSec < 2.5 && mouseResult.targetsHit >= 8) {
+                botPoints += 25;
+                notes.push("Targets were clicked too quickly for normal human behavior");
+            }
+
+            if (mouseResult.totalMouseDistance < 250 && mouseResult.targetsHit >= 8) {
+                botPoints += 20;
+                notes.push("Mouse path is too short and too precise");
+            }
+
+            if (mouseResult.pattern.includes("Robotic")) {
+                botPoints += 25;
+                notes.push("Mouse pattern appears robotic");
+            }
+
+            if (mouseResult.pattern.includes("Low Activity")) {
+                botPoints += 15;
+                notes.push("Mouse activity is too low");
+            }
+
+            return {
+                botPoints,
+                notes
+            };
+        }
+
+        function analyzeTypingBotLikelihood(typingResult) {
+            let botPoints = 0;
+            const notes = [];
+
+            if (typingResult.wpm > 100) {
+                botPoints += 30;
+                notes.push("Typing speed is unrealistically fast");
+            } else if (typingResult.wpm > 80) {
+                botPoints += 15;
+                notes.push("Typing speed is unusually high");
+            }
+
+            if (typingResult.avgDelay > 0 && typingResult.avgDelay < 35) {
+                botPoints += 30;
+                notes.push("Key delay is too low for natural typing");
+            } else if (typingResult.avgDelay > 0 && typingResult.avgDelay < 55) {
+                botPoints += 15;
+                notes.push("Key delay is suspiciously low");
+            }
+
+            if (typingResult.backspaceCount === 0 && typingResult.typedLength > 70) {
+                botPoints += 20;
+                notes.push("Typing is overly perfect with no corrections");
+            }
+
+            if (typingResult.mistakeCount === 0 && typingResult.typedLength > 70) {
+                botPoints += 15;
+                notes.push("No typing mistakes detected in long text");
+            }
+
+            if (typingResult.pattern.includes("Suspicious")) {
+                botPoints += 20;
+                notes.push("Typing pattern appears automated");
+            }
+
+            if (typingResult.pattern.includes("Overly Perfect")) {
+                botPoints += 15;
+                notes.push("Typing pattern is too perfect");
+            }
+
+            return {
+                botPoints,
+                notes
+            };
+        }
+
+        function analyzeReactionBotLikelihood(reactionResult) {
+            let botPoints = 0;
+            const notes = [];
+
+            if (!reactionResult) {
+                botPoints += 10;
+                notes.push("Reaction challenge not completed");
+                return {
+                    botPoints,
+                    notes
+                };
+            }
+
+            if (reactionResult.pattern.includes("Jumped Early")) {
+                botPoints += 20;
+                notes.push("User clicked before the visual cue");
+            }
+
+            if (reactionResult.reactionMs > 0 && reactionResult.reactionMs < 120) {
+                botPoints += 30;
+                notes.push("Reaction time is unrealistically fast");
+            } else if (reactionResult.reactionMs > 700) {
+                botPoints += 10;
+                notes.push("Reaction time is unusually slow");
+            } else {
+                notes.push("Reaction timing appears human-like");
+            }
+
+            return {
+                botPoints,
+                notes
+            };
+        }
+
+        function generateFinalAnalysis() {
+            const mouseResult = JSON.parse(localStorage.getItem("mouseChallengeResult")) || null;
+            const typingResult = JSON.parse(localStorage.getItem("typingChallengeResult")) || null;
+            const reactionResult = JSON.parse(localStorage.getItem("reactionChallengeResult")) || null;
+
+            const findings = [];
+            let score = 100;
+            let botScore = 0;
+
+            if (!mouseResult) {
+                findings.push("Mouse challenge not completed");
+                score -= 20;
+                botScore += 10;
+            } else {
+                const mouseBot = analyzeMouseBotLikelihood(mouseResult);
+                botScore += mouseBot.botPoints;
+                findings.push(...mouseBot.notes);
+
+                if (mouseBot.botPoints >= 30) score -= 30;
+                else if (mouseBot.botPoints >= 15) score -= 15;
+                else findings.push("Mouse movement appears human and natural");
+            }
+
+            if (!typingResult) {
+                findings.push("Typing challenge not completed");
+                score -= 20;
+                botScore += 10;
+            } else {
+                const typingBot = analyzeTypingBotLikelihood(typingResult);
+                botScore += typingBot.botPoints;
+                findings.push(...typingBot.notes);
+
+                if (typingBot.botPoints >= 30) score -= 30;
+                else if (typingBot.botPoints >= 15) score -= 15;
+                else findings.push("Typing behavior appears human and natural");
+            }
+
+            const reactionBot = analyzeReactionBotLikelihood(reactionResult);
+            botScore += reactionBot.botPoints;
+            findings.push(...reactionBot.notes);
+
+            if (reactionBot.botPoints >= 20) score -= 20;
+            else if (reactionBot.botPoints >= 10) score -= 10;
+
+            if (score < 0) score = 0;
+            if (botScore > 100) botScore = 100;
+
+            let status = "Human";
+            let cls = "safe";
+
+            if (botScore >= 60) {
+                status = "Bot-like";
+                cls = "danger";
+            } else if (botScore >= 30) {
+                status = "Suspicious";
+                cls = "medium";
+            }
+
+            document.getElementById("humanScore").innerText = score;
+            document.getElementById("humanStatus").innerHTML = `<span class="${cls}">${status}</span>`;
+            document.getElementById("botLikelihoodText").innerText = botScore;
+
+            const findingsList = document.getElementById("behaviorFindings");
+            findingsList.innerHTML = "";
+
+            if (findings.length === 0) {
+                const li = document.createElement("li");
+                li.textContent = "No suspicious indicators found.";
+                findingsList.appendChild(li);
+            } else {
+                findings.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    findingsList.appendChild(li);
+                });
+            }
+
+            localStorage.setItem("humanBehaviorScore", score);
+            localStorage.setItem("humanBehaviorStatus", status);
+            localStorage.setItem("botLikelihoodScore", botScore);
+        }
+
+        loadRandomSentence();
+        randomTargetPosition();
+    </script>
+</body>
+
+</html>

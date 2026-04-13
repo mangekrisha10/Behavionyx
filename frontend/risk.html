@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Risk Reports - Behavionyx</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        
+         :root {
+            --bg: #f6f9fc;
+            --card: rgba(255, 255, 255, 0.78);
+            --line: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+            --blue: #2563eb;
+            --blue-soft: #dbeafe;
+            --green: #16a34a;
+            --green-soft: #dcfce7;
+            --orange: #d97706;
+            --orange-soft: #fef3c7;
+            --red: #dc2626;
+            --red-soft: #fee2e2;
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            --shadow-hover: 0 18px 40px rgba(37, 99, 235, 0.12);
+            --radius: 22px;
+        }
+        
+        body {
+            margin: 0;
+            color: var(--text);
+            background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 30%), radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 25%), linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
+        }
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: rgba(15, 23, 42, 0.96);
+            color: white;
+            padding: 24px 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 34px;
+        }
+        
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 20px;
+        }
+        
+        .sidebar h2 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: -0.4px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            margin: 8px 0;
+        }
+        
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: #cbd5e1;
+            padding: 12px 14px;
+            border-radius: 14px;
+            transition: 0.25s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+        
+        .sidebar .active a {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.16));
+            color: #7dd3fc;
+            font-weight: 700;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 28px;
+        }
+        
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .headline h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+            letter-spacing: -0.7px;
+        }
+        
+        .headline p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 15px;
+        }
+        
+        .top-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        
+        .btn-primary {
+            color: white;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            border: 1px solid var(--line);
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+        
+        .hero {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+        
+        .hero-card,
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: 0.25s ease;
+        }
+        
+        .hero-card:hover,
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .hero-card {
+            padding: 24px;
+        }
+        
+        .risk-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+        
+        .hero-left h3,
+        .card h3 {
+            margin: 0 0 14px;
+            font-size: 18px;
+            letter-spacing: -0.2px;
+        }
+        
+        .hero-left p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        
+        .big-risk {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1;
+            margin: 8px 0 10px;
+            letter-spacing: -2px;
+        }
+        
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        .low {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+        
+        .medium {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        
+        .high {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+        
+        .neutral {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        .gauge-wrap {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+        
+        .gauge {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(var(--blue) 0deg, #dbeafe 0deg);
+            display: grid;
+            place-items: center;
+            transition: background 1s ease;
+        }
+        
+        .gauge::before {
+            content: "";
+            width: 132px;
+            height: 132px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: inset 0 0 0 1px #eef2f7;
+        }
+        
+        .gauge-center {
+            position: absolute;
+            text-align: center;
+        }
+        
+        .gauge-center strong {
+            display: block;
+            font-size: 34px;
+            letter-spacing: -1px;
+        }
+        
+        .gauge-center span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+        
+        .card {
+            padding: 22px;
+        }
+        
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin: 6px 0 10px;
+        }
+        
+        .muted {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+        
+        .span-4 {
+            grid-column: span 4;
+        }
+        
+        .span-5 {
+            grid-column: span 5;
+        }
+        
+        .span-6 {
+            grid-column: span 6;
+        }
+        
+        .span-7 {
+            grid-column: span 7;
+        }
+        
+        .span-8 {
+            grid-column: span 8;
+        }
+        
+        .span-12 {
+            grid-column: span 12;
+        }
+        
+        .breakdown-grid {
+            display: grid;
+            gap: 14px;
+        }
+        
+        .breakdown-item {
+            background: #f8fbff;
+            border: 1px solid #edf2f7;
+            border-radius: 16px;
+            padding: 14px;
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .breakdown-item:hover {
+            border-color: #bfdbfe;
+            background: #f0f7ff;
+        }
+        
+        .breakdown-item.active {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+        }
+        
+        .breakdown-head {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .bar {
+            width: 100%;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        
+        .bar-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #60a5fa, #2563eb);
+            transition: width 1s ease;
+        }
+        
+        .detail-box {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        
+        .list {
+            margin: 0;
+            padding-left: 20px;
+            line-height: 1.9;
+        }
+        
+        .list li {
+            margin-bottom: 4px;
+        }
+        
+        .mini-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        
+        .mini-box {
+            background: #f8fafc;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+            transition: 0.2s ease;
+        }
+        
+        .mini-box:hover {
+            transform: translateY(-2px);
+            border-color: #bfdbfe;
+        }
+        
+        .mini-box h4 {
+            margin: 0 0 8px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .mini-box p {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+        }
+        
+        .compare {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+        
+        .compare-panel {
+            background: #f8fafc;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        
+        .compare-panel h4 {
+            margin: 0 0 10px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 22px;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: linear-gradient(180deg, #93c5fd, #dbeafe);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding: 0 0 18px 8px;
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeUp 0.45s ease forwards;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2563eb;
+            box-shadow: 0 0 0 5px #dbeafe;
+        }
+        
+        .timeline-time {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        
+        .verdict-box {
+            background: linear-gradient(180deg, #f8fbff, #f8fafc);
+            border: 1px solid #dbeafe;
+            border-radius: 18px;
+            padding: 18px;
+            line-height: 1.9;
+        }
+        
+        .floating-note {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #1e40af;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        
+        .session-compare-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+        }
+        
+        .session-compare-item:last-child {
+            border-bottom: none;
+        }
+        
+        .delta-up {
+            color: var(--red);
+            font-weight: 700;
+        }
+        
+        .delta-down {
+            color: var(--green);
+            font-weight: 700;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 1100px) {
+            .hero,
+            .quick-grid,
+            .compare,
+            .mini-grid {
+                grid-template-columns: 1fr;
+            }
+            .span-4,
+            .span-5,
+            .span-6,
+            .span-7,
+            .span-8,
+            .span-12 {
+                grid-column: span 12;
+            }
+        }
+        
+        @media (max-width: 850px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+            .main {
+                padding: 20px;
+            }
+            .risk-hero {
+                justify-content: center;
+            }
+            .headline h1 {
+                font-size: 28px;
+            }
+        }
+        
+        @media print {
+            .sidebar,
+            .top-actions {
+                display: none;
+            }
+            .dashboard {
+                display: block;
+            }
+            .main {
+                padding: 0;
+            }
+            .card,
+            .hero-card {
+                box-shadow: none;
+                background: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">🔐</div>
+                <h2>Behavionyx</h2>
+            </div>
+            <ul>
+                <li><a href="dashboard.html">Overview</a></li>
+                <li><a href="behavior.html">Behavior Analysis</a></li>
+                <li class="active"><a href="risk.html">Risk Reports</a></li>
+                <li><a href="activity.html">User Activity</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
+                <div class="headline">
+                    <h1>Risk Intelligence Report</h1>
+                    <p>Behavior-driven security assessment with interactive analysis, confidence scoring, and action recommendations.</p>
+                </div>
+                <div class="top-actions">
+                    <button class="btn btn-secondary" onclick="refreshInsights()">Refresh Insights</button>
+                    <button class="btn btn-primary" onclick="window.print()">Export Report</button>
+                </div>
+            </div>
+
+            <section class="hero">
+                <div class="hero-card">
+                    <div class="risk-hero">
+                        <div class="hero-left">
+                            <h3>Overall Risk Overview</h3>
+                            <div class="big-risk" id="overallRiskScore">0</div>
+                            <span class="pill neutral" id="riskLevelPill">Unknown</span>
+                            <div class="floating-note" id="riskSummaryText">Risk summary will appear here.</div>
+                        </div>
+                        <div class="gauge-wrap">
+                            <div class="gauge" id="riskGauge"></div>
+                            <div class="gauge-center">
+                                <strong id="gaugeValue">0</strong>
+                                <span>Risk Score</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-card">
+                    <h3>AI Risk Reasoning</h3>
+                    <div class="verdict-box" id="reasoningText">Loading reasoning...</div>
+                </div>
+            </section>
+
+            <section class="quick-grid">
+                <div class="card">
+                    <h3>Threat Classification</h3>
+                    <div class="metric-value" id="threatType">-</div>
+                    <p class="muted" id="threatReason">Threat reasoning will appear here.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Recommended Action</h3>
+                    <div class="metric-value" id="recommendedAction">-</div>
+                    <p class="muted" id="actionReason">Action advice will appear here.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Confidence Score</h3>
+                    <div class="metric-value" id="confidenceScore">0%</div>
+                    <p class="muted" id="confidenceText">Confidence level will appear here.</p>
+                </div>
+            </section>
+
+            <section class="grid">
+                <div class="card span-7">
+                    <h3>Risk Breakdown by Factor</h3>
+                    <div class="breakdown-grid" id="riskBreakdownBars"></div>
+                    <div class="detail-box" id="breakdownDetail">
+                        Click any risk factor to see why it influenced the score.
+                    </div>
+                </div>
+
+                <div class="card span-5">
+                    <h3>Session Metrics</h3>
+                    <div class="mini-grid">
+                        <div class="mini-box">
+                            <h4>Human Behavior Score</h4>
+                            <p id="humanBehaviorScoreBox">0</p>
+                        </div>
+                        <div class="mini-box">
+                            <h4>Bot Likelihood</h4>
+                            <p id="botLikelihoodBox">0%</p>
+                        </div>
+                        <div class="mini-box">
+                            <h4>Typing Speed</h4>
+                            <p id="typingSpeedBox">0 WPM</p>
+                        </div>
+                        <div class="mini-box">
+                            <h4>Reaction Time</h4>
+                            <p id="reactionTimeBox">0 ms</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card span-6">
+                    <h3>Suspicious Indicators</h3>
+                    <ul class="list" id="suspiciousIndicators">
+                        <li>Loading indicators...</li>
+                    </ul>
+                </div>
+
+                <div class="card span-6">
+                    <h3>Human vs Bot Comparison</h3>
+                    <div class="compare">
+                        <div class="compare-panel">
+                            <h4>Human-like Signs</h4>
+                            <ul class="list" id="humanSigns">
+                                <li>Loading...</li>
+                            </ul>
+                        </div>
+                        <div class="compare-panel">
+                            <h4>Bot-like Signs</h4>
+                            <ul class="list" id="botSigns">
+                                <li>Loading...</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card span-6">
+                    <h3>Risk Timeline</h3>
+                    <div class="timeline" id="riskTimeline"></div>
+                </div>
+
+                <div class="card span-6">
+                    <h3>Change from Previous Session</h3>
+                    <div id="sessionComparison"></div>
+                </div>
+
+                <div class="card span-12">
+                    <h3>Final Session Verdict</h3>
+                    <div class="verdict-box" id="finalVerdictBox">Loading verdict...</div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function readJSON(key) {
+            try {
+                return JSON.parse(localStorage.getItem(key));
+            } catch {
+                return null;
+            }
+        }
+
+        const mouseResult = readJSON("mouseChallengeResult") || {};
+        const typingResult = readJSON("typingChallengeResult") || {};
+        const reactionResult = readJSON("reactionChallengeResult") || {};
+
+        const humanBehaviorScore = Number(localStorage.getItem("humanBehaviorScore")) || 0;
+        const humanBehaviorStatus = localStorage.getItem("humanBehaviorStatus") || "Unknown";
+        const botLikelihoodScore = Number(localStorage.getItem("botLikelihoodScore")) || 0;
+        const lastLoginUser = localStorage.getItem("lastLoginUser") || "Unknown User";
+        const lastLoginTime = localStorage.getItem("lastLoginTime") || new Date().toLocaleString();
+
+        let typingRisk = 0;
+        let mouseRisk = 0;
+        let reactionRisk = 0;
+        let deviceRisk = 8;
+        let environmentRisk = 10;
+
+        const suspiciousIndicators = [];
+        const humanSigns = [];
+        const botSigns = [];
+
+        const factorDescriptions = {};
+
+        function computeTypingRisk() {
+            let risk = 0;
+            let reasons = [];
+
+            if ((typingResult.wpm || 0) > 100) {
+                risk += 30;
+                suspiciousIndicators.push("Typing speed is unrealistically fast");
+                botSigns.push("Very high typing speed");
+                reasons.push("Typing speed exceeded a realistic human range.");
+            } else if ((typingResult.wpm || 0) > 80) {
+                risk += 18;
+                suspiciousIndicators.push("Typing speed is unusually high");
+                botSigns.push("High typing speed");
+                reasons.push("Typing was faster than typical natural input.");
+            } else {
+                humanSigns.push("Typing speed falls in human range");
+                reasons.push("Typing speed stayed within a normal human range.");
+            }
+
+            if ((typingResult.avgDelay || 0) > 0 && (typingResult.avgDelay || 0) < 35) {
+                risk += 25;
+                suspiciousIndicators.push("Key delay is too low for natural typing");
+                botSigns.push("Unnaturally low keystroke delay");
+                reasons.push("Keystroke delay was too small to look natural.");
+            } else if ((typingResult.avgDelay || 0) >= 60) {
+                humanSigns.push("Typing delay variation looks natural");
+                reasons.push("Keystroke delay showed normal human variation.");
+            }
+
+            if ((typingResult.backspaceCount || 0) === 0 && (typingResult.typedLength || 0) > 70) {
+                risk += 15;
+                suspiciousIndicators.push("Long text typed with no corrections");
+                botSigns.push("Overly perfect typing");
+                reasons.push("Long input without corrections may indicate automated text entry.");
+            } else if ((typingResult.backspaceCount || 0) > 0) {
+                humanSigns.push("User made natural corrections while typing");
+                reasons.push("Corrections were observed, which is common in human typing.");
+            }
+
+            if ((typingResult.mistakeCount || 0) > 10) {
+                risk += 10;
+                suspiciousIndicators.push("Typing contains many inconsistencies");
+                reasons.push("High number of mistakes lowered trust in the session.");
+            } else if ((typingResult.mistakeCount || 0) <= 5 && (typingResult.typedLength || 0) > 20) {
+                humanSigns.push("Typing accuracy appears balanced and realistic");
+                reasons.push("Accuracy looks realistic without being too perfect.");
+            }
+
+            factorDescriptions.typing = reasons.join(" ");
+            return Math.min(risk, 40);
+        }
+
+        function computeMouseRisk() {
+            let risk = 0;
+            let reasons = [];
+
+            if ((mouseResult.speed || 0) > 1400) {
+                risk += 25;
+                suspiciousIndicators.push("Mouse movement speed is unrealistically high");
+                botSigns.push("Mouse movement appears robotic");
+                reasons.push("Cursor speed was faster than normal human mouse behavior.");
+            } else if ((mouseResult.speed || 0) > 0 && (mouseResult.speed || 0) < 80) {
+                risk += 12;
+                suspiciousIndicators.push("Mouse activity is unusually low");
+                botSigns.push("Very low mouse activity");
+                reasons.push("Very low activity suggests weak interaction realism.");
+            } else if ((mouseResult.speed || 0) >= 150 && (mouseResult.speed || 0) <= 1200) {
+                humanSigns.push("Mouse speed appears natural");
+                reasons.push("Cursor movement speed appears normal.");
+            }
+
+            if ((mouseResult.trackPoints || 0) < 15) {
+                risk += 12;
+                suspiciousIndicators.push("Very low mouse tracking points detected");
+                botSigns.push("Low cursor movement sampling");
+                reasons.push("Few cursor points were recorded, which reduces confidence in natural movement.");
+            } else if ((mouseResult.trackPoints || 0) >= 20) {
+                humanSigns.push("Mouse path contains sufficient movement data");
+                reasons.push("Cursor path contained enough movement samples.");
+            }
+
+            if ((mouseResult.totalMouseDistance || 0) < 250 && (mouseResult.targetsHit || 0) >= 8) {
+                risk += 15;
+                suspiciousIndicators.push("Mouse path is too short and too precise");
+                botSigns.push("Overly precise cursor path");
+                reasons.push("Target completion path was unusually precise.");
+            }
+
+            if ((mouseResult.durationSec || 0) > 0 && (mouseResult.durationSec || 0) < 2.5 && (mouseResult.targetsHit || 0) >= 8) {
+                risk += 18;
+                suspiciousIndicators.push("Targets were clicked too quickly");
+                botSigns.push("Target clicks completed too fast");
+                reasons.push("The challenge was completed too quickly for a typical user.");
+            } else if ((mouseResult.durationSec || 0) >= 3) {
+                humanSigns.push("Target completion time appears human-like");
+                reasons.push("Completion timing appears realistic.");
+            }
+
+            factorDescriptions.mouse = reasons.join(" ");
+            return Math.min(risk, 35);
+        }
+
+        function computeReactionRisk() {
+            let risk = 0;
+            let reasons = [];
+
+            if ((reactionResult.pattern || "").includes("Jumped Early")) {
+                risk += 20;
+                suspiciousIndicators.push("User clicked before the visual cue");
+                botSigns.push("Premature reaction attempt");
+                reasons.push("The user clicked before the real signal appeared.");
+            }
+
+            if ((reactionResult.reactionMs || 0) > 0 && (reactionResult.reactionMs || 0) < 120) {
+                risk += 22;
+                suspiciousIndicators.push("Reaction time is unrealistically fast");
+                botSigns.push("Too-fast reaction timing");
+                reasons.push("Reaction time was faster than expected for human reflexes.");
+            } else if ((reactionResult.reactionMs || 0) >= 180 && (reactionResult.reactionMs || 0) <= 450) {
+                humanSigns.push("Reaction timing appears natural");
+                reasons.push("Reaction timing stayed inside a human-like band.");
+            } else if ((reactionResult.reactionMs || 0) > 700) {
+                risk += 8;
+                suspiciousIndicators.push("Reaction time is unusually slow");
+                reasons.push("Slow reaction may indicate hesitation or low confidence.");
+            }
+
+            factorDescriptions.reaction = reasons.join(" ");
+            return Math.min(risk, 25);
+        }
+
+        function getRiskLevel(score) {
+            if (score <= 30) return {
+                text: "Low",
+                className: "low"
+            };
+            if (score <= 60) return {
+                text: "Medium",
+                className: "medium"
+            };
+            return {
+                text: "High",
+                className: "high"
+            };
+        }
+
+        function getThreatType(score, botScore) {
+            if (botScore >= 70) return "Automated Login Attempt";
+            if (botScore >= 50) return "Bot-like Session";
+            if (score >= 70) return "Suspicious User";
+            if (score >= 45) return "Under Review Session";
+            return "Normal User";
+        }
+
+        function getRecommendedAction(score, botScore) {
+            if (botScore >= 70) return "Block Session";
+            if (botScore >= 50 || score >= 70) return "Require MFA";
+            if (score >= 45) return "Allow but Monitor";
+            return "Allow Access";
+        }
+
+        function getConfidence(score, indicatorsCount) {
+            let confidence = 55;
+            confidence += Math.min(indicatorsCount * 6, 24);
+            confidence += Math.min(Math.abs(score - 50) / 2, 16);
+
+            if (botLikelihoodScore >= 60) confidence += 10;
+            if (humanBehaviorScore >= 75 && botLikelihoodScore <= 20) confidence += 8;
+
+            return Math.min(Math.round(confidence), 98);
+        }
+
+        function renderBreakdown(breakdown) {
+            const container = document.getElementById("riskBreakdownBars");
+            container.innerHTML = "";
+
+            breakdown.forEach((item, index) => {
+                const row = document.createElement("div");
+                row.className = "breakdown-item";
+                row.dataset.factor = item.key;
+                row.innerHTML = `
+                    <div class="breakdown-head">
+                        <span>${item.label}</span>
+                        <span>${item.value}</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" data-width="${Math.min(item.value, 100)}"></div>
+                    </div>
+                `;
+
+                row.addEventListener("click", () => {
+                    document.querySelectorAll(".breakdown-item").forEach(el => el.classList.remove("active"));
+                    row.classList.add("active");
+                    document.getElementById("breakdownDetail").innerText =
+                        factorDescriptions[item.key] || `${item.label} contributed ${item.value} points to the overall risk score.`;
+                });
+
+                container.appendChild(row);
+
+                if (index === 0) {
+                    setTimeout(() => row.click(), 50);
+                }
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll(".bar-fill").forEach(bar => {
+                    bar.style.width = `${bar.dataset.width}%`;
+                });
+            }, 150);
+        }
+
+        function renderList(id, items, emptyText) {
+            const el = document.getElementById(id);
+            el.innerHTML = "";
+
+            if (!items.length) {
+                const li = document.createElement("li");
+                li.textContent = emptyText;
+                el.appendChild(li);
+                return;
+            }
+
+            items.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                el.appendChild(li);
+            });
+        }
+
+        function renderTimeline(threatType, action) {
+            const timeline = document.getElementById("riskTimeline");
+            timeline.innerHTML = "";
+
+            const events = [{
+                time: "Phase 1",
+                text: `Login session started for ${lastLoginUser}`
+            }, {
+                time: "Phase 2",
+                text: "Typing rhythm and correction behavior analyzed"
+            }, {
+                time: "Phase 3",
+                text: "Mouse activity and target interaction evaluated"
+            }, {
+                time: "Phase 4",
+                text: "Reaction timing challenge processed"
+            }, {
+                time: "Phase 5",
+                text: `Threat classified as ${threatType}`
+            }, {
+                time: "Phase 6",
+                text: `System recommends: ${action}`
+            }];
+
+            events.forEach((event, index) => {
+                const div = document.createElement("div");
+                div.className = "timeline-item";
+                div.style.animationDelay = `${index * 0.08}s`;
+                div.innerHTML = `
+                    <div class="timeline-time">${event.time}</div>
+                    <div>${event.text}</div>
+                `;
+                timeline.appendChild(div);
+            });
+        }
+
+        function renderComparison(currentScore) {
+            const container = document.getElementById("sessionComparison");
+            container.innerHTML = "";
+
+            const prev = readJSON("previousRiskSnapshot");
+            const current = {
+                riskScore: currentScore,
+                typingWpm: Number(typingResult.wpm) || 0,
+                mouseSpeed: Number(mouseResult.speed) || 0,
+                reactionMs: Number(reactionResult.reactionMs) || 0,
+                botScore: botLikelihoodScore
+            };
+
+            if (!prev) {
+                container.innerHTML = `<p class="muted">No previous session available. This report has been saved as the baseline for future comparison.</p>`;
+            } else {
+                const rows = [{
+                    label: "Risk Score",
+                    delta: current.riskScore - (prev.riskScore || 0),
+                    suffix: "pts"
+                }, {
+                    label: "Typing Speed",
+                    delta: current.typingWpm - (prev.typingWpm || 0),
+                    suffix: "WPM"
+                }, {
+                    label: "Mouse Speed",
+                    delta: current.mouseSpeed - (prev.mouseSpeed || 0),
+                    suffix: "px/s"
+                }, {
+                    label: "Reaction Time",
+                    delta: current.reactionMs - (prev.reactionMs || 0),
+                    suffix: "ms"
+                }, {
+                    label: "Bot Likelihood",
+                    delta: current.botScore - (prev.botScore || 0),
+                    suffix: "%"
+                }];
+
+                rows.forEach(row => {
+                    const div = document.createElement("div");
+                    div.className = "session-compare-item";
+                    const cls = row.delta > 0 ? "delta-up" : row.delta < 0 ? "delta-down" : "";
+                    div.innerHTML = `
+                        <span>${row.label}</span>
+                        <span class="${cls}">
+                            ${row.delta > 0 ? "+" : ""}${Math.round(row.delta)} ${row.suffix}
+                        </span>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            localStorage.setItem("previousRiskSnapshot", JSON.stringify(current));
+        }
+
+        function setGauge(score) {
+            const gauge = document.getElementById("riskGauge");
+            const gaugeValue = document.getElementById("gaugeValue");
+            const deg = Math.round((score / 100) * 360);
+            gauge.style.background = `conic-gradient(#2563eb ${deg}deg, #dbeafe ${deg}deg)`;
+            gaugeValue.innerText = score;
+        }
+
+        function initRiskPage() {
+            suspiciousIndicators.length = 0;
+            humanSigns.length = 0;
+            botSigns.length = 0;
+
+            typingRisk = computeTypingRisk();
+            mouseRisk = computeMouseRisk();
+            reactionRisk = computeReactionRisk();
+
+            let overallRisk = typingRisk + mouseRisk + reactionRisk + deviceRisk + environmentRisk;
+
+            if (humanBehaviorScore > 0) {
+                overallRisk += Math.max(0, 100 - humanBehaviorScore) * 0.15;
+            }
+
+            if (botLikelihoodScore >= 60) {
+                overallRisk += 10;
+            } else if (botLikelihoodScore >= 30) {
+                overallRisk += 5;
+            }
+
+            overallRisk = Math.min(Math.round(overallRisk), 100);
+
+            const riskLevel = getRiskLevel(overallRisk);
+            const threatType = getThreatType(overallRisk, botLikelihoodScore);
+            const action = getRecommendedAction(overallRisk, botLikelihoodScore);
+            const confidence = getConfidence(overallRisk, suspiciousIndicators.length);
+
+            document.getElementById("overallRiskScore").innerText = overallRisk;
+            document.getElementById("gaugeValue").innerText = overallRisk;
+            setGauge(overallRisk);
+
+            const pill = document.getElementById("riskLevelPill");
+            pill.innerText = `${riskLevel.text} Risk`;
+            pill.className = `pill ${riskLevel.className}`;
+
+            document.getElementById("riskSummaryText").innerText =
+                `This session is classified as ${riskLevel.text.toLowerCase()} risk based on typing behavior, cursor realism, reaction timing, and overall bot likelihood.`;
+
+            document.getElementById("threatType").innerText = threatType;
+            document.getElementById("threatReason").innerText =
+                `Classification is based on combined behavioral signals and anomaly weighting from the session.`;
+
+            document.getElementById("recommendedAction").innerText = action;
+            document.getElementById("actionReason").innerText =
+                action === "Block Session" ? "Risk is too high and strongly suggests automated or hostile activity." :
+                action === "Require MFA" ? "Additional verification is recommended before granting sensitive access." :
+                action === "Allow but Monitor" ? "Allow the session but continue monitoring for anomalies." :
+                "Behavior appears acceptable for standard access.";
+
+            document.getElementById("confidenceScore").innerText = `${confidence}%`;
+            document.getElementById("confidenceText").innerText =
+                confidence >= 80 ? "High confidence in the assessment." :
+                confidence >= 65 ? "Moderate confidence in the assessment." :
+                "Limited behavioral signals reduce certainty.";
+
+            renderBreakdown([{
+                key: "typing",
+                label: "Typing Risk",
+                value: typingRisk
+            }, {
+                key: "mouse",
+                label: "Mouse Risk",
+                value: mouseRisk
+            }, {
+                key: "reaction",
+                label: "Reaction Risk",
+                value: reactionRisk
+            }, {
+                key: "device",
+                label: "Device Risk",
+                value: deviceRisk
+            }, {
+                key: "environment",
+                label: "Environment Risk",
+                value: environmentRisk
+            }]);
+
+            factorDescriptions.device = "This fixed factor represents device trust and recognition assumptions in the current demo model.";
+            factorDescriptions.environment = "This fixed factor represents environment and session-context uncertainty in the current demo model.";
+
+            renderList("suspiciousIndicators", suspiciousIndicators, "No major suspicious indicators detected.");
+            renderList("humanSigns", humanSigns, "No strong human-like signs detected yet.");
+            renderList("botSigns", botSigns, "No strong bot-like signs detected.");
+
+            document.getElementById("humanBehaviorScoreBox").innerText = humanBehaviorScore || 0;
+            document.getElementById("botLikelihoodBox").innerText = `${botLikelihoodScore || 0}%`;
+            document.getElementById("typingSpeedBox").innerText = `${Math.round(typingResult.wpm || 0)} WPM`;
+            document.getElementById("reactionTimeBox").innerText = `${Math.round(reactionResult.reactionMs || 0)} ms`;
+
+            const reasoning = `This session is marked as ${threatType.toLowerCase()} because the system observed ${
+                suspiciousIndicators.length ? suspiciousIndicators.slice(0, 3).join(", ").toLowerCase() : "minimal suspicious behavior"
+            }. The bot likelihood stands at ${botLikelihoodScore}%, while the final weighted risk score is ${overallRisk}.`;
+
+            document.getElementById("reasoningText").innerText = reasoning;
+
+            renderTimeline(threatType, action);
+            renderComparison(overallRisk);
+
+            document.getElementById("finalVerdictBox").innerHTML = `
+                <strong>Verdict:</strong> ${threatType}<br>
+                <strong>User:</strong> ${lastLoginUser}<br>
+                <strong>Session Time:</strong> ${lastLoginTime}<br>
+                <strong>Risk Level:</strong> ${riskLevel.text}<br>
+                <strong>Recommended Action:</strong> ${action}<br>
+                <strong>Summary:</strong> The platform evaluated behavioral biometric signals across typing, mouse movement, and reaction timing. Based on the weighted analysis, this session should be handled as <strong>${riskLevel.text.toLowerCase()} risk</strong> with the response <strong>${action}</strong>.
+            `;
+        }
+
+        function refreshInsights() {
+            document.querySelectorAll(".bar-fill").forEach(bar => bar.style.width = "0%");
+            setTimeout(initRiskPage, 150);
+        }
+
+        initRiskPage();
+    </script>
+</body>
+
+</html>

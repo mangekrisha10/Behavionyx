@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>User Activity - Behavionyx</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        
+         :root {
+            --bg: #f8fbff;
+            --card: rgba(255, 255, 255, 0.85);
+            --line: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+            --blue: #2563eb;
+            --blue-soft: #dbeafe;
+            --green: #16a34a;
+            --green-soft: #dcfce7;
+            --orange: #d97706;
+            --orange-soft: #fef3c7;
+            --red: #dc2626;
+            --red-soft: #fee2e2;
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            --radius: 22px;
+        }
+        
+        body {
+            margin: 0;
+            color: var(--text);
+            background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 30%), radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 25%), linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
+        }
+        
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: rgba(15, 23, 42, 0.96);
+            color: white;
+            padding: 24px 20px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 34px;
+        }
+        
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 20px;
+        }
+        
+        .sidebar h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar li {
+            margin: 8px 0;
+        }
+        
+        .sidebar a {
+            display: block;
+            text-decoration: none;
+            color: #cbd5e1;
+            padding: 12px 14px;
+            border-radius: 14px;
+            transition: 0.25s ease;
+            font-weight: 500;
+        }
+        
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+        
+        .sidebar .active a {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(14, 165, 233, 0.16));
+            color: #7dd3fc;
+            font-weight: 700;
+        }
+        
+        .main {
+            flex: 1;
+            padding: 28px;
+        }
+        
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        
+        .headline h1 {
+            margin: 0 0 8px;
+            font-size: 34px;
+            letter-spacing: -0.7px;
+        }
+        
+        .headline p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 15px;
+        }
+        
+        .top-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        
+        .btn-primary {
+            color: white;
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            border: 1px solid var(--line);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .hero-grid,
+        .stats-grid,
+        .main-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .hero-grid {
+            grid-template-columns: 1.2fr 1fr;
+            margin-bottom: 22px;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(4, 1fr);
+            margin-bottom: 22px;
+        }
+        
+        .main-grid {
+            grid-template-columns: repeat(12, 1fr);
+        }
+        
+        .span-4 {
+            grid-column: span 4;
+        }
+        
+        .span-5 {
+            grid-column: span 5;
+        }
+        
+        .span-6 {
+            grid-column: span 6;
+        }
+        
+        .span-7 {
+            grid-column: span 7;
+        }
+        
+        .span-8 {
+            grid-column: span 8;
+        }
+        
+        .span-12 {
+            grid-column: span 12;
+        }
+        
+        .card {
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 22px;
+            transition: 0.25s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 40px rgba(37, 99, 235, 0.10);
+        }
+        
+        .card h3 {
+            margin: 0 0 14px;
+            font-size: 18px;
+        }
+        
+        .big-score {
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin: 6px 0 10px;
+        }
+        
+        .muted {
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        .low {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+        
+        .medium {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        
+        .high {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+        
+        .neutral {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        .trust-wrap {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .gauge-wrap {
+            width: 170px;
+            height: 170px;
+            position: relative;
+            display: grid;
+            place-items: center;
+        }
+        
+        .gauge {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: conic-gradient(#2563eb 0deg, #dbeafe 0deg);
+            display: grid;
+            place-items: center;
+            transition: background 1s ease;
+        }
+        
+        .gauge::before {
+            content: "";
+            width: 126px;
+            height: 126px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.96);
+        }
+        
+        .gauge-center {
+            position: absolute;
+            text-align: center;
+        }
+        
+        .gauge-center strong {
+            display: block;
+            font-size: 34px;
+        }
+        
+        .gauge-center span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .trust-line {
+            margin-top: 16px;
+        }
+        
+        .line-track {
+            height: 12px;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        
+        .line-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+            transition: width 1s ease;
+        }
+        
+        .trust-points {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .point-chip {
+            background: #f8fafc;
+            border: 1px solid var(--line);
+            padding: 8px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+        
+        .stat-card h4 {
+            margin: 0 0 10px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .stat-card p {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+        
+        .drift-grid {
+            display: grid;
+            gap: 14px;
+        }
+        
+        .drift-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            transition: 0.2s ease;
+        }
+        
+        .drift-item:hover {
+            border-color: #bfdbfe;
+            background: #f0f7ff;
+        }
+        
+        .drift-left strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .drift-left span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .delta-up {
+            color: var(--red);
+            font-weight: 700;
+        }
+        
+        .delta-down {
+            color: var(--green);
+            font-weight: 700;
+        }
+        
+        .highlights-grid {
+            display: grid;
+            gap: 14px;
+        }
+        
+        .highlight-card {
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid var(--line);
+            background: #fff;
+            transition: 0.2s ease;
+        }
+        
+        .highlight-card:hover {
+            transform: translateY(-2px);
+            border-color: #fecaca;
+            background: #fffafa;
+        }
+        
+        .highlight-card h4 {
+            margin: 0 0 8px;
+            font-size: 15px;
+        }
+        
+        .highlight-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        
+        .severity {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .severity-warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        
+        .severity-critical {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 22px;
+        }
+        
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: linear-gradient(180deg, #93c5fd, #dbeafe);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding: 0 0 18px 8px;
+            opacity: 0;
+            transform: translateY(8px);
+            animation: fadeUp 0.45s ease forwards;
+        }
+        
+        .timeline-item::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2563eb;
+            box-shadow: 0 0 0 5px #dbeafe;
+        }
+        
+        .timeline-time {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+        
+        .activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        
+        .activity-table th,
+        .activity-table td {
+            text-align: left;
+            padding: 14px 12px;
+            border-bottom: 1px solid #eef2f7;
+            vertical-align: top;
+        }
+        
+        .activity-table th {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
+        .tag-normal {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+        
+        .tag-warning {
+            background: var(--orange-soft);
+            color: var(--orange);
+        }
+        
+        .tag-critical {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+        
+        .empty-note {
+            padding: 16px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            line-height: 1.7;
+        }
+        
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 1100px) {
+            .hero-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .span-4,
+            .span-5,
+            .span-6,
+            .span-7,
+            .span-8,
+            .span-12 {
+                grid-column: span 12;
+            }
+        }
+        
+        @media (max-width: 850px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+            .main {
+                padding: 20px;
+            }
+            .headline h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">📊</div>
+                <h2>Behavionyx</h2>
+            </div>
+            <ul>
+                <li><a href="dashboard.html">Overview</a></li>
+                <li><a href="behavior.html">Behavior Analysis</a></li>
+                <li><a href="risk.html">Risk Reports</a></li>
+                <li class="active"><a href="activity.html">User Activity</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
+                <div class="headline">
+                    <h1>User Activity Intelligence</h1>
+                    <p>Track trust decay, detect behavior drift, flag suspicious moments, and reconstruct the session timeline.</p>
+                </div>
+                <div class="top-actions">
+                    <button class="btn btn-secondary" onclick="refreshActivity()">Refresh</button>
+                    <button class="btn btn-primary" onclick="window.print()">Export Activity</button>
+                </div>
+            </div>
+
+            <section class="hero-grid">
+                <div class="card">
+                    <h3>Trust Decay Engine</h3>
+                    <div class="trust-wrap">
+                        <div>
+                            <div class="big-score" id="trustScore">100</div>
+                            <span class="pill neutral" id="trustStatus">Stable</span>
+                            <p class="muted" id="trustSummary">Trust score will update based on suspicious behavior detected in the session.</p>
+                        </div>
+                        <div class="gauge-wrap">
+                            <div class="gauge" id="trustGauge"></div>
+                            <div class="gauge-center">
+                                <strong id="trustGaugeValue">100</strong>
+                                <span>Trust</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trust-line">
+                        <div class="line-track">
+                            <div class="line-fill" id="trustLineFill"></div>
+                        </div>
+                        <div class="trust-points" id="trustPoints"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Session Snapshot</h3>
+                    <p class="muted" id="sessionSummary">
+                        Loading session summary...
+                    </p>
+                    <div class="empty-note" id="activityInsightBox">
+                        Loading live activity insight...
+                    </div>
+                </div>
+            </section>
+
+            <section class="stats-grid">
+                <div class="card stat-card">
+                    <h4>Total Events</h4>
+                    <p id="totalEvents">0</p>
+                </div>
+                <div class="card stat-card">
+                    <h4>Warning Events</h4>
+                    <p id="warningEvents">0</p>
+                </div>
+                <div class="card stat-card">
+                    <h4>Critical Events</h4>
+                    <p id="criticalEvents">0</p>
+                </div>
+                <div class="card stat-card">
+                    <h4>Session Heat</h4>
+                    <p id="sessionHeat">Cool</p>
+                </div>
+            </section>
+
+            <section class="main-grid">
+                <div class="card span-6">
+                    <h3>Behavior Drift Detection</h3>
+                    <div class="drift-grid" id="driftGrid"></div>
+                </div>
+
+                <div class="card span-6">
+                    <h3>Suspicious Moment Highlights</h3>
+                    <div class="highlights-grid" id="highlightGrid"></div>
+                </div>
+
+                <div class="card span-5">
+                    <h3>Session Timeline</h3>
+                    <div class="timeline" id="activityTimeline"></div>
+                </div>
+
+                <div class="card span-7">
+                    <h3>Activity Investigation Feed</h3>
+                    <table class="activity-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Source</th>
+                                <th>Severity</th>
+                                <th>Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function readJSON(key) {
+            try {
+                return JSON.parse(localStorage.getItem(key));
+            } catch {
+                return null;
+            }
+        }
+
+        function setGauge(elementId, valueId, score) {
+            const gauge = document.getElementById(elementId);
+            const text = document.getElementById(valueId);
+            const deg = Math.round((score / 100) * 360);
+            gauge.style.background = `conic-gradient(#2563eb ${deg}deg, #dbeafe ${deg}deg)`;
+            text.innerText = Math.round(score);
+        }
+
+        const typingResult = readJSON("typingChallengeResult") || {};
+        const mouseResult = readJSON("mouseChallengeResult") || {};
+        const reactionResult = readJSON("reactionChallengeResult") || {};
+
+        const humanBehaviorScore = Number(localStorage.getItem("humanBehaviorScore")) || 0;
+        const botLikelihoodScore = Number(localStorage.getItem("botLikelihoodScore")) || 0;
+        const lastLoginUser = localStorage.getItem("lastLoginUser") || "Unknown User";
+        const lastLoginTime = localStorage.getItem("lastLoginTime") || new Date().toLocaleString();
+
+        const previousActivitySnapshot = readJSON("previousActivitySnapshot");
+
+        function buildTrustDecay() {
+            let trust = 100;
+            const points = [{
+                label: "Start",
+                value: trust
+            }];
+            const reasons = [];
+            const events = [];
+
+            function applyDecay(label, amount, severity, reason, source) {
+                trust = Math.max(0, trust - amount);
+                points.push({
+                    label,
+                    value: trust
+                });
+                reasons.push(`${label} reduced trust by ${amount}`);
+                events.push({
+                    label,
+                    severity,
+                    reason,
+                    source
+                });
+            }
+
+            if ((typingResult.wpm || 0) > 100) {
+                applyDecay("Extreme typing speed", 18, "Critical", "Typing speed exceeded a natural range.", "Behavior Analysis");
+            } else if ((typingResult.wpm || 0) > 80) {
+                applyDecay("High typing speed", 10, "Warning", "Typing was unusually fast.", "Behavior Analysis");
+            }
+
+            if ((typingResult.avgDelay || 0) > 0 && (typingResult.avgDelay || 0) < 35) {
+                applyDecay("Low key delay", 16, "Critical", "Keystroke timing was too perfect or too fast.", "Behavior Analysis");
+            }
+
+            if ((typingResult.backspaceCount || 0) === 0 && (typingResult.typedLength || 0) > 70) {
+                applyDecay("No typing corrections", 10, "Warning", "Long text was typed without any correction.", "Behavior Analysis");
+            }
+
+            if ((mouseResult.speed || 0) > 1400) {
+                applyDecay("Robotic mouse speed", 15, "Critical", "Mouse movement speed was unrealistically high.", "Behavior Analysis");
+            } else if ((mouseResult.speed || 0) > 0 && (mouseResult.speed || 0) < 80) {
+                applyDecay("Low mouse activity", 8, "Warning", "Mouse activity was unusually low.", "Behavior Analysis");
+            }
+
+            if ((mouseResult.totalMouseDistance || 0) < 250 && (mouseResult.targetsHit || 0) >= 8) {
+                applyDecay("Overly precise path", 12, "Warning", "Target hits were too precise for a natural user.", "Behavior Analysis");
+            }
+
+            if ((reactionResult.pattern || "").includes("Jumped Early")) {
+                applyDecay("Early reaction click", 14, "Critical", "User clicked before the real signal appeared.", "Behavior Analysis");
+            }
+
+            if ((reactionResult.reactionMs || 0) > 0 && (reactionResult.reactionMs || 0) < 120) {
+                applyDecay("Too-fast reaction", 18, "Critical", "Reaction timing was faster than expected for normal reflexes.", "Behavior Analysis");
+            } else if ((reactionResult.reactionMs || 0) > 700) {
+                applyDecay("Slow reaction", 6, "Warning", "Reaction timing was unusually slow.", "Behavior Analysis");
+            }
+
+            if (botLikelihoodScore >= 60) {
+                applyDecay("High bot likelihood", 16, "Critical", "Bot-likelihood score indicates high automation risk.", "Risk Report");
+            } else if (botLikelihoodScore >= 30) {
+                applyDecay("Moderate bot likelihood", 8, "Warning", "Behavior suggests partial automation signs.", "Risk Report");
+            }
+
+            return {
+                trust,
+                points,
+                reasons,
+                events
+            };
+        }
+
+        function getTrustStatus(score) {
+            if (score >= 75) return {
+                text: "Stable",
+                cls: "low"
+            };
+            if (score >= 45) return {
+                text: "Watching",
+                cls: "medium"
+            };
+            return {
+                text: "Compromised",
+                cls: "high"
+            };
+        }
+
+        function getSessionHeat(trust, criticalEvents) {
+            if (criticalEvents >= 3 || trust < 40) return "Dangerous";
+            if (criticalEvents >= 1 || trust < 65) return "Elevated";
+            if (trust < 85) return "Watching";
+            return "Cool";
+        }
+
+        function renderTrustDecay(trustData) {
+            document.getElementById("trustScore").innerText = trustData.trust;
+            document.getElementById("trustGaugeValue").innerText = trustData.trust;
+            setGauge("trustGauge", "trustGaugeValue", trustData.trust);
+
+            const status = getTrustStatus(trustData.trust);
+            const pill = document.getElementById("trustStatus");
+            pill.innerText = status.text;
+            pill.className = `pill ${status.cls}`;
+
+            document.getElementById("trustSummary").innerText =
+                `Trust started at 100 and changed based on session behavior, interaction realism, and suspicious moments.`;
+
+            const fill = document.getElementById("trustLineFill");
+            fill.style.width = "0%";
+            setTimeout(() => {
+                fill.style.width = `${trustData.trust}%`;
+            }, 150);
+
+            const pointsEl = document.getElementById("trustPoints");
+            pointsEl.innerHTML = "";
+            trustData.points.forEach(point => {
+                const chip = document.createElement("div");
+                chip.className = "point-chip";
+                chip.textContent = `${point.label}: ${point.value}`;
+                pointsEl.appendChild(chip);
+            });
+        }
+
+        function renderDrift() {
+            const grid = document.getElementById("driftGrid");
+            grid.innerHTML = "";
+
+            const current = {
+                typingWpm: Number(typingResult.wpm) || 0,
+                mouseSpeed: Number(mouseResult.speed) || 0,
+                reactionMs: Number(reactionResult.reactionMs) || 0,
+                trust: Number(document.getElementById("trustScore").innerText) || 0
+            };
+
+            const driftItems = previousActivitySnapshot ? [{
+                label: "Typing Speed Drift",
+                current: `${Math.round(current.typingWpm)} WPM`,
+                delta: current.typingWpm - (previousActivitySnapshot.typingWpm || 0),
+                explanation: "Change in current typing pace compared to previous session."
+            }, {
+                label: "Mouse Speed Drift",
+                current: `${Math.round(current.mouseSpeed)} px/s`,
+                delta: current.mouseSpeed - (previousActivitySnapshot.mouseSpeed || 0),
+                explanation: "Difference in cursor movement speed across sessions."
+            }, {
+                label: "Reaction Drift",
+                current: `${Math.round(current.reactionMs)} ms`,
+                delta: current.reactionMs - (previousActivitySnapshot.reactionMs || 0),
+                explanation: "Shift in reaction timing from the last recorded session."
+            }, {
+                label: "Trust Drift",
+                current: `${Math.round(current.trust)}`,
+                delta: current.trust - (previousActivitySnapshot.trust || 0),
+                explanation: "Overall trust movement compared to the prior session."
+            }] : [];
+
+            if (!driftItems.length) {
+                grid.innerHTML = `<div class="empty-note">No previous session available yet. Complete another session to unlock behavior drift detection.</div>`;
+            } else {
+                driftItems.forEach(item => {
+                    const row = document.createElement("div");
+                    row.className = "drift-item";
+
+                    const cls = item.delta > 0 ? "delta-up" : item.delta < 0 ? "delta-down" : "";
+                    const sign = item.delta > 0 ? "+" : "";
+
+                    row.innerHTML = `
+                        <div class="drift-left">
+                            <strong>${item.label}</strong>
+                            <span>${item.explanation}</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-weight:700;">${item.current}</div>
+                            <div class="${cls}" style="font-size:13px; margin-top:4px;">${sign}${Math.round(item.delta)}</div>
+                        </div>
+                    `;
+                    grid.appendChild(row);
+                });
+            }
+
+            localStorage.setItem("previousActivitySnapshot", JSON.stringify(current));
+        }
+
+        function buildHighlights() {
+            const highlights = [];
+
+            if ((reactionResult.reactionMs || 0) > 0 && (reactionResult.reactionMs || 0) < 120) {
+                highlights.push({
+                    title: "Fastest Reaction Detected",
+                    text: `Reaction was completed in ${Math.round(reactionResult.reactionMs)} ms, which is unusually fast and may indicate automated behavior.`,
+                    severity: "Critical"
+                });
+            }
+
+            if ((typingResult.backspaceCount || 0) === 0 && (typingResult.typedLength || 0) > 70) {
+                highlights.push({
+                    title: "Perfect Typing Pattern",
+                    text: "A long typing challenge was completed without corrections, which is unusually perfect for a normal session.",
+                    severity: "Warning"
+                });
+            }
+
+            if ((mouseResult.totalMouseDistance || 0) < 250 && (mouseResult.targetsHit || 0) >= 8) {
+                highlights.push({
+                    title: "Overly Precise Mouse Path",
+                    text: "Mouse movement distance stayed very low while still completing all target hits accurately.",
+                    severity: "Warning"
+                });
+            }
+
+            if ((typingResult.avgDelay || 0) > 0 && (typingResult.avgDelay || 0) < 35) {
+                highlights.push({
+                    title: "Low Keystroke Variability",
+                    text: "The delay between keystrokes was too low and too uniform, which reduces human realism.",
+                    severity: "Critical"
+                });
+            }
+
+            if (!highlights.length) {
+                highlights.push({
+                    title: "No Major Suspicious Moment",
+                    text: "This session does not currently show a strong standout anomaly in the tracked actions.",
+                    severity: "Warning"
+                });
+            }
+
+            return highlights.slice(0, 4);
+        }
+
+        function renderHighlights(items) {
+            const grid = document.getElementById("highlightGrid");
+            grid.innerHTML = "";
+
+            items.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "highlight-card";
+                const severityClass = item.severity === "Critical" ? "severity-critical" : "severity-warning";
+
+                card.innerHTML = `
+                    <h4>${item.title}</h4>
+                    <p>${item.text}</p>
+                    <span class="severity ${severityClass}">${item.severity}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderTimeline(events) {
+            const timeline = document.getElementById("activityTimeline");
+            timeline.innerHTML = "";
+
+            events.forEach((event, index) => {
+                const row = document.createElement("div");
+                row.className = "timeline-item";
+                row.style.animationDelay = `${index * 0.08}s`;
+                row.innerHTML = `
+                    <div class="timeline-time">${event.time}</div>
+                    <div><strong>${event.title}</strong></div>
+                    <div style="color:#64748b; margin-top:4px;">${event.text}</div>
+                `;
+                timeline.appendChild(row);
+            });
+        }
+
+        function renderFeed(events) {
+            const body = document.getElementById("activityTableBody");
+            body.innerHTML = "";
+
+            events.forEach(event => {
+                const tagClass =
+                    event.severity === "Critical" ? "tag-critical" :
+                    event.severity === "Warning" ? "tag-warning" :
+                    "tag-normal";
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${event.label}</strong></td>
+                    <td>${event.source}</td>
+                    <td><span class="tag ${tagClass}">${event.severity}</span></td>
+                    <td>${event.reason}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function initActivityPage() {
+            const trustData = buildTrustDecay();
+            renderTrustDecay(trustData);
+            renderDrift();
+
+            const warningEvents = trustData.events.filter(e => e.severity === "Warning").length;
+            const criticalEvents = trustData.events.filter(e => e.severity === "Critical").length;
+            const totalEvents = trustData.events.length;
+            const sessionHeat = getSessionHeat(trustData.trust, criticalEvents);
+
+            document.getElementById("totalEvents").innerText = totalEvents;
+            document.getElementById("warningEvents").innerText = warningEvents;
+            document.getElementById("criticalEvents").innerText = criticalEvents;
+            document.getElementById("sessionHeat").innerText = sessionHeat;
+
+            document.getElementById("sessionSummary").innerText =
+                `${lastLoginUser} logged in at ${lastLoginTime}. This page reconstructs how trust changed during the session based on typing, mouse, reaction, and bot-risk signals.`;
+
+            document.getElementById("activityInsightBox").innerText =
+                trustData.trust < 45 ?
+                "The session trust dropped sharply. Multiple signals point to elevated or automated behavior." :
+                trustData.trust < 75 ?
+                "Trust partially decayed during the session. Some actions should be reviewed." :
+                "The session remained relatively stable with limited suspicious activity.";
+
+            const highlightItems = buildHighlights();
+            renderHighlights(highlightItems);
+
+            const timelineEvents = [{
+                time: "Phase 1",
+                title: "Session Started",
+                text: `Login recorded for ${lastLoginUser}`
+            }, {
+                time: "Phase 2",
+                title: "Typing Behavior Captured",
+                text: "Typing speed, delay, and correction behavior were measured."
+            }, {
+                time: "Phase 3",
+                title: "Mouse Challenge Evaluated",
+                text: "Cursor activity, path precision, and movement realism were checked."
+            }, {
+                time: "Phase 4",
+                title: "Reaction Challenge Analyzed",
+                text: "Reaction timing and early-click anomalies were inspected."
+            }, {
+                time: "Phase 5",
+                title: "Trust Decay Computed",
+                text: `Session trust settled at ${trustData.trust}.`
+            }, {
+                time: "Phase 6",
+                title: "Highlights Generated",
+                text: "Top suspicious moments were extracted for investigation."
+            }];
+            renderTimeline(timelineEvents);
+
+            const feedEvents = [{
+                    label: "Login Session Created",
+                    source: "Login Page",
+                    severity: "Normal",
+                    reason: "A new session was initialized and user activity tracking began."
+                },
+                ...trustData.events
+            ];
+            renderFeed(feedEvents);
+        }
+
+        function refreshActivity() {
+            document.getElementById("trustLineFill").style.width = "0%";
+            setTimeout(initActivityPage, 150);
+        }
+
+        initActivityPage();
+    </script>
+</body>
+
+</html>
