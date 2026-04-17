@@ -27,7 +27,7 @@ document.addEventListener("mousemove", (e) => {
 });
 
 // =====================
-// TOGGLE LOGIN / SIGNUP
+// TAB SWITCHING
 // =====================
 function showLogin() {
     document.getElementById("loginForm").style.display = "block";
@@ -35,8 +35,6 @@ function showLogin() {
 
     document.getElementById("loginTab").classList.add("active");
     document.getElementById("signupTab").classList.remove("active");
-
-    document.querySelector(".slider").style.left = "4px";
 }
 
 function showSignup() {
@@ -45,8 +43,6 @@ function showSignup() {
 
     document.getElementById("signupTab").classList.add("active");
     document.getElementById("loginTab").classList.remove("active");
-
-    document.querySelector(".slider").style.left = "calc(50% + 0px)";
 }
 
 // =====================
@@ -114,48 +110,9 @@ function calculateBehaviorRisk() {
 }
 
 // =====================
-// LOGIN FUNCTION
-// =====================
-function login() {
-    let username = document.getElementById("loginUsername").value.trim();
-    let password = document.getElementById("password").value.trim();
-
-    let savedUser = localStorage.getItem("username");
-    let savedPass = localStorage.getItem("password");
-
-    if (!username || !password) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    if (username === savedUser && password === savedPass) {
-        console.log("Typing:", keyTimes);
-        console.log("Mouse:", mouseData);
-
-        const result = calculateBehaviorRisk();
-
-        localStorage.setItem("risk", result.risk);
-        localStorage.setItem("prediction", result.prediction);
-        localStorage.setItem("mouseData", JSON.stringify(mouseData));
-        localStorage.setItem("keyTimes", JSON.stringify(keyTimes));
-        localStorage.setItem("lastLoginUser", username);
-        localStorage.setItem("lastLoginTime", new Date().toLocaleString());
-
-        alert("Login successful ✅");
-
-        keyTimes = [];
-        mouseData = [];
-
-        window.location.href = "dashboard.html";
-    } else {
-        alert("Invalid credentials ❌");
-    }
-}
-
-// =====================
 // SIGNUP FUNCTION
 // =====================
-function signup() {
+async function signup() {
     let username = document.getElementById("signupUsername").value.trim();
     let password = document.getElementById("signupPassword").value.trim();
     let confirmPassword = document.getElementById("confirmPassword").value.trim();
@@ -165,19 +122,91 @@ function signup() {
         return;
     }
 
+    if (password.length < 4) {
+        alert("Password must be at least 4 characters");
+        return;
+    }
+
     if (password !== confirmPassword) {
         alert("Passwords do not match ❌");
         return;
     }
 
-    localStorage.setItem("username", username);
-    localStorage.setItem("password", password);
+    try {
+        const response = await fetch("/api/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password, confirmPassword })
+        });
 
-    alert("Account created successfully ✅ Please login");
+        const data = await response.json();
 
-    document.getElementById("signupUsername").value = "";
-    document.getElementById("signupPassword").value = "";
-    document.getElementById("confirmPassword").value = "";
+        if (!response.ok) {
+            alert(data.message);
+            return;
+        }
 
-    showLogin();
+        alert(data.message);
+
+        document.getElementById("signupUsername").value = "";
+        document.getElementById("signupPassword").value = "";
+        document.getElementById("confirmPassword").value = "";
+
+        showLogin();
+    } catch (error) {
+        console.log("Signup error:", error);
+        alert("Signup failed");
+    }
+}
+
+// =====================
+// LOGIN FUNCTION
+// =====================
+async function login() {
+    let username = document.getElementById("loginUsername").value.trim();
+    let password = document.getElementById("password").value.trim();
+
+    if (!username || !password) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message);
+            return;
+        }
+
+        const result = calculateBehaviorRisk();
+
+        localStorage.setItem("userLoggedIn", "true");
+        localStorage.setItem("risk", result.risk);
+        localStorage.setItem("prediction", result.prediction);
+        localStorage.setItem("mouseData", JSON.stringify(mouseData));
+        localStorage.setItem("keyTimes", JSON.stringify(keyTimes));
+        localStorage.setItem("lastLoginUser", data.username);
+        localStorage.setItem("lastLoginTime", new Date().toLocaleString());
+
+        alert("Login successful ✅");
+
+        keyTimes = [];
+        mouseData = [];
+
+        window.location.href = "dashboard.html";
+    } catch (error) {
+        console.log("Login error:", error);
+        alert("Login failed");
+    }
 }

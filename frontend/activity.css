@@ -1,0 +1,267 @@
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif
+}
+
+:root {
+    --bg1: #f8fbff;
+    --bg2: #eef5ff;
+    --sidebar: #0f172a;
+    --text: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --blue: #2563eb;
+    --cyan: #06b6d4;
+    --green: #16a34a;
+    --orange: #d97706;
+    --red: #dc2626;
+    --low-bg: #dcfce7;
+    --mid-bg: #fef3c7;
+    --high-bg: #fee2e2;
+    --neutral-bg: #e2e8f0;
+    --shadow: 0 12px 30px rgba(15, 23, 42, .08);
+    --radius: 20px;
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(circle at top left, rgba(37, 99, 235, .10), transparent 25%), radial-gradient(circle at bottom right, rgba(6, 182, 212, .10), transparent 20%), linear-gradient(180deg, var(--bg1), var(--bg2));
+    color: var(--text)
+}
+
+.wrap {
+    display: flex;
+    min-height: 100vh
+}
+
+
+/* Sidebar */
+
+.side {
+    width: 240px;
+    background: rgba(15, 23, 42, .98);
+    color: #fff;
+    padding: 24px 18px;
+    position: sticky;
+    top: 0;
+    height: 100vh
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    color: white;
+    font-weight: bold
+}
+
+.side a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 12px;
+    margin: 8px 0;
+    transition: .25s
+}
+
+.side a:hover,
+.side a.active {
+    background: #1e293b;
+    color: #fff
+}
+
+
+/* Main */
+
+.main {
+    flex: 1;
+    padding: 28px
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px
+}
+
+.btn {
+    border: 0;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600
+}
+
+.b1 {
+    background: #fff;
+    border: 1px solid var(--line)
+}
+
+.b2 {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    color: white
+}
+
+
+/* Grid */
+
+.grid {
+    display: grid;
+    gap: 18px
+}
+
+.g2 {
+    grid-template-columns: repeat(2, 1fr)
+}
+
+.g4 {
+    grid-template-columns: repeat(4, 1fr)
+}
+
+
+/* Cards */
+
+.card {
+    background: rgba(255, 255, 255, .85);
+    backdrop-filter: blur(12px);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow)
+}
+
+.big {
+    font-size: 42px;
+    font-weight: 800
+}
+
+.muted {
+    color: var(--muted)
+}
+
+
+/* Pills */
+
+.pill,
+.tag,
+.sev {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold
+}
+
+.low {
+    background: var(--low-bg);
+    color: var(--green)
+}
+
+.mid {
+    background: var(--mid-bg);
+    color: var(--orange)
+}
+
+.high {
+    background: var(--high-bg);
+    color: var(--red)
+}
+
+.neutral {
+    background: var(--neutral-bg)
+}
+
+
+/* Gauge */
+
+.gauge {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    position: relative
+}
+
+.gauge:before {
+    content: "";
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 50%;
+    position: absolute
+}
+
+.gauge span {
+    position: relative;
+    font-weight: bold
+}
+
+
+/* Line */
+
+.line {
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 12px
+}
+
+.fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+    transition: 1s
+}
+
+
+/* Items */
+
+.item {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    margin-top: 10px;
+    background: #f8fafc
+}
+
+
+/* Table */
+
+table {
+    width: 100%;
+    border-collapse: collapse
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e2e8f0
+}
+
+
+/* Responsive */
+
+@media(max-width:900px) {
+    .wrap {
+        flex-direction: column
+    }
+    .side {
+        width: 100%
+    }
+    .g2,
+    .g4 {
+        grid-template-columns: 1fr
+    }
+}

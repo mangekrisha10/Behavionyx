@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Behavionyx - User Activity</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Segoe UI, sans-serif
+        }
+        
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            color: #0f172a
+        }
+        
+        .wrap {
+            display: flex;
+            min-height: 100vh
+        }
+        
+        .side {
+            width: 220px;
+            background: #0f172a;
+            color: #fff;
+            padding: 20px
+        }
+        
+        .side h2 {
+            margin: 0 0 20px
+        }
+        
+        .side a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 6px 0
+        }
+        
+        .side a:hover,
+        .active {
+            background: #1e293b;
+            color: #fff
+        }
+        
+        .main {
+            flex: 1;
+            padding: 20px
+        }
+        
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px
+        }
+        
+        .btn {
+            border: 0;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600
+        }
+        
+        .b1 {
+            background: #fff;
+            border: 1px solid #cbd5e1
+        }
+        
+        .b2 {
+            background: #2563eb;
+            color: #fff
+        }
+        
+        .grid {
+            display: grid;
+            gap: 16px
+        }
+        
+        .g2 {
+            grid-template-columns: repeat(2, 1fr)
+        }
+        
+        .g4 {
+            grid-template-columns: repeat(4, 1fr)
+        }
+        
+        .card {
+            background: #fff;
+            padding: 18px;
+            border-radius: 18px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .06)
+        }
+        
+        .big {
+            font-size: 42px;
+            font-weight: 800
+        }
+        
+        .muted {
+            color: #64748b
+        }
+        
+        .pill,
+        .tag,
+        .sev {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700
+        }
+        
+        .low {
+            background: #dcfce7;
+            color: #16a34a
+        }
+        
+        .mid {
+            background: #fef3c7;
+            color: #d97706
+        }
+        
+        .high {
+            background: #fee2e2;
+            color: #dc2626
+        }
+        
+        .neutral {
+            background: #e2e8f0;
+            color: #334155
+        }
+        
+        .gauge {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: auto;
+            position: relative
+        }
+        
+        .gauge:before {
+            content: "";
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute
+        }
+        
+        .gauge span {
+            position: relative;
+            font-size: 26px;
+            font-weight: 800
+        }
+        
+        .line {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 12px
+        }
+        
+        .fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+            transition: 1s
+        }
+        
+        .chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px
+        }
+        
+        .chip {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px
+        }
+        
+        .item {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            margin-top: 10px;
+            background: #f8fafc
+        }
+        
+        .timeline .item {
+            position: relative;
+            padding-left: 14px
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+        
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left
+        }
+        
+        @media(max-width:900px) {
+            .wrap {
+                flex-direction: column
+            }
+            .side {
+                width: 100%
+            }
+            .g2,
+            .g4 {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <aside class="side">
+            <h2>Behavionyx</h2>
+            <a href="dashboard.html">Overview</a>
+            <a href="behavior.html">Behavior Analysis</a>
+            <a href="risk.html">Risk Reports</a>
+            <a href="Usera_activity.html" class="active">User Activity</a>
+            <a href="index.html">Logout</a>
+        </aside>
+
+        <main class="main">
+            <div class="top">
+                <div>
+                    <h1 style="margin:0">User Activity Intelligence</h1>
+                    <p class="muted">Track trust, drift, suspicious moments, and timeline.</p>
+                </div>
+                <div>
+                    <button class="btn b1" onclick="refreshPage()">Refresh</button>
+                    <button class="btn b2" onclick="window.print()">Export</button>
+                </div>
+            </div>
+
+            <div class="grid g2" style="margin-top:16px">
+                <div class="card">
+                    <h3>Trust Decay Engine</h3>
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px">
+                        <div>
+                            <div class="big" id="trustScore">100</div>
+                            <span id="trustStatus" class="pill neutral">Stable</span>
+                            <p class="muted" id="trustSummary">Trust score based on session behavior.</p>
+                        </div>
+                        <div class="gauge" id="gauge"><span id="gaugeVal">100</span></div>
+                    </div>
+                    <div class="line">
+                        <div class="fill" id="fill"></div>
+                    </div>
+                    <div class="chips" id="points"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Session Snapshot</h3>
+                    <p class="muted" id="sessionSummary">Loading...</p>
+                    <div class="item" id="insightBox">Loading insight...</div>
+                </div>
+            </div>
+
+            <div class="grid g4" style="margin-top:16px">
+                <div class="card">
+                    <h4 class="muted">Total Events</h4>
+                    <div class="big" style="font-size:28px" id="totalEvents">0</div>
+                </div>
+                <div class="card">
+                    <h4 class="muted">Warning Events</h4>
+                    <div class="big" style="font-size:28px" id="warningEvents">0</div>
+                </div>
+                <div class="card">
+                    <h4 class="muted">Critical Events</h4>
+                    <div class="big" style="font-size:28px" id="criticalEvents">0</div>
+                </div>
+                <div class="card">
+                    <h4 class="muted">Session Heat</h4>
+                    <div class="big" style="font-size:28px" id="sessionHeat">Cool</div>
+                </div>
+            </div>
+
+            <div class="grid g2" style="margin-top:16px">
+                <div class="card">
+                    <h3>Behavior Drift Detection</h3>
+                    <div id="driftGrid"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Suspicious Moment Highlights</h3>
+                    <div id="highlightGrid"></div>
+                </div>
+            </div>
+
+            <div class="grid g2" style="margin-top:16px">
+                <div class="card">
+                    <h3>Session Timeline</h3>
+                    <div class="timeline" id="timeline"></div>
+                </div>
+
+                <div class="card">
+                    <h3>Activity Investigation Feed</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Source</th>
+                                <th>Severity</th>
+                                <th>Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feed"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const get = k => {
+            try {
+                return JSON.parse(localStorage.getItem(k)) || {};
+            } catch {
+                return {};
+            }
+        };
+        const num = k => Number(localStorage.getItem(k)) || 0;
+
+        const typing = get("typingChallengeResult");
+        const mouse = get("mouseChallengeResult");
+        const reaction = get("reactionChallengeResult");
+        const prev = get("previousActivitySnapshot");
+        const bot = num("botLikelihoodScore");
+        const user = localStorage.getItem("lastLoginUser") || "Unknown User";
+        const time = localStorage.getItem("lastLoginTime") || new Date().toLocaleString();
+
+        function setGauge(score) {
+            const deg = Math.round(score * 3.6);
+            document.getElementById("gauge").style.background =
+                `conic-gradient(#2563eb ${deg}deg,#dbeafe ${deg}deg)`;
+            document.getElementById("gaugeVal").textContent = score;
+        }
+
+        function decay() {
+            let trust = 100,
+                points = [{
+                    label: "Start",
+                    value: 100
+                }],
+                events = [];
+            const add = (label, loss, severity, reason, source) => {
+                trust = Math.max(0, trust - loss);
+                points.push({
+                    label,
+                    value: trust
+                });
+                events.push({
+                    label,
+                    severity,
+                    reason,
+                    source
+                });
+            };
+
+            if ((typing.wpm || 0) > 100) add("Extreme typing speed", 18, "Critical", "Typing speed too high.", "Behavior");
+            else if ((typing.wpm || 0) > 80) add("High typing speed", 10, "Warning", "Typing unusually fast.", "Behavior");
+
+            if ((typing.avgDelay || 0) > 0 && (typing.avgDelay || 0) < 35)
+                add("Low key delay", 16, "Critical", "Keystroke timing too perfect.", "Behavior");
+
+            if ((typing.backspaceCount || 0) === 0 && (typing.typedLength || 0) > 70)
+                add("No typing corrections", 10, "Warning", "Long text without correction.", "Behavior");
+
+            if ((mouse.speed || 0) > 1400) add("Robotic mouse speed", 15, "Critical", "Mouse speed unrealistically high.", "Behavior");
+            else if ((mouse.speed || 0) > 0 && (mouse.speed || 0) < 80) add("Low mouse activity", 8, "Warning", "Very low cursor activity.", "Behavior");
+
+            if ((mouse.totalMouseDistance || 0) < 250 && (mouse.targetsHit || 0) >= 8)
+                add("Overly precise path", 12, "Warning", "Too precise for natural movement.", "Behavior");
+
+            if ((reaction.pattern || "").includes("Jumped Early"))
+                add("Early reaction click", 14, "Critical", "Clicked before actual signal.", "Behavior");
+
+            if ((reaction.reactionMs || 0) > 0 && (reaction.reactionMs || 0) < 120)
+                add("Too-fast reaction", 18, "Critical", "Reaction faster than normal human reflex.", "Behavior");
+            else if ((reaction.reactionMs || 0) > 700)
+                add("Slow reaction", 6, "Warning", "Reaction slower than normal.", "Behavior");
+
+            if (bot >= 60) add("High bot likelihood", 16, "Critical", "Automation risk is high.", "Risk");
+            else if (bot >= 30) add("Moderate bot likelihood", 8, "Warning", "Some automation signs found.", "Risk");
+
+            return {
+                trust,
+                points,
+                events
+            };
+        }
+
+        function status(score) {
+            if (score >= 75) return ["Stable", "low"];
+            if (score >= 45) return ["Watching", "mid"];
+            return ["Compromised", "high"];
+        }
+
+        function heat(score, critical) {
+            if (critical >= 3 || score < 40) return "Dangerous";
+            if (critical >= 1 || score < 65) return "Elevated";
+            if (score < 85) return "Watching";
+            return "Cool";
+        }
+
+        function renderTrust(d) {
+            document.getElementById("trustScore").textContent = d.trust;
+            document.getElementById("trustSummary").textContent = "Trust started at 100 and changed based on session behavior.";
+            setGauge(d.trust);
+
+            const [txt, cls] = status(d.trust);
+            const s = document.getElementById("trustStatus");
+            s.textContent = txt;
+            s.className = "pill " + cls;
+
+            const points = document.getElementById("points");
+            points.innerHTML = d.points.map(p => `<span class="chip">${p.label}: ${p.value}</span>`).join("");
+            setTimeout(() => document.getElementById("fill").style.width = d.trust + "%", 100);
+        }
+
+        function renderStats(d) {
+            const warns = d.events.filter(x => x.severity === "Warning").length;
+            const crits = d.events.filter(x => x.severity === "Critical").length;
+            document.getElementById("totalEvents").textContent = d.events.length;
+            document.getElementById("warningEvents").textContent = warns;
+            document.getElementById("criticalEvents").textContent = crits;
+            document.getElementById("sessionHeat").textContent = heat(d.trust, crits);
+
+            document.getElementById("sessionSummary").textContent =
+                `${user} logged in at ${time}. This page tracks typing, mouse, reaction, and risk signals.`;
+
+            document.getElementById("insightBox").textContent =
+                d.trust < 45 ? "Trust dropped sharply. Multiple signals indicate suspicious behavior." :
+                d.trust < 75 ? "Trust partially decayed. Some actions should be reviewed." :
+                "Session looks mostly stable with limited suspicious activity.";
+        }
+
+        function renderDrift(score) {
+            const cur = {
+                typingWpm: Number(typing.wpm) || 0,
+                mouseSpeed: Number(mouse.speed) || 0,
+                reactionMs: Number(reaction.reactionMs) || 0,
+                trust: score
+            };
+            const box = document.getElementById("driftGrid");
+
+            if (!prev || Object.keys(prev).length === 0) {
+                box.innerHTML = `<div class="item muted">No previous session available yet.</div>`;
+            } else {
+                const arr = [
+                    ["Typing Speed Drift", `${Math.round(cur.typingWpm)} WPM`, cur.typingWpm - (prev.typingWpm || 0)],
+                    ["Mouse Speed Drift", `${Math.round(cur.mouseSpeed)} px/s`, cur.mouseSpeed - (prev.mouseSpeed || 0)],
+                    ["Reaction Drift", `${Math.round(cur.reactionMs)} ms`, cur.reactionMs - (prev.reactionMs || 0)],
+                    ["Trust Drift", `${Math.round(cur.trust)}`, cur.trust - (prev.trust || 0)]
+                ];
+                box.innerHTML = arr.map(([a, b, c]) =>
+                    `<div class="item"><strong>${a}</strong><br>${b}<br>
+      <span class="${c>0?'high':c<0?'low':'neutral'} pill" style="margin-top:6px">${c>0?'+':''}${Math.round(c)}</span></div>`
+                ).join("");
+            }
+            localStorage.setItem("previousActivitySnapshot", JSON.stringify(cur));
+        }
+
+        function renderHighlights() {
+            let h = [];
+            if ((reaction.reactionMs || 0) > 0 && (reaction.reactionMs || 0) < 120)
+                h.push(["Fastest Reaction Detected", `${Math.round(reaction.reactionMs)} ms reaction is unusually fast.`, "high"]);
+            if ((typing.backspaceCount || 0) === 0 && (typing.typedLength || 0) > 70)
+                h.push(["Perfect Typing Pattern", "Long typing challenge without corrections.", "mid"]);
+            if ((mouse.totalMouseDistance || 0) < 250 && (mouse.targetsHit || 0) >= 8)
+                h.push(["Overly Precise Mouse Path", "Target hits were too accurate with very low movement.", "mid"]);
+            if ((typing.avgDelay || 0) > 0 && (typing.avgDelay || 0) < 35)
+                h.push(["Low Keystroke Variability", "Delay between keys is too low and uniform.", "high"]);
+            if (!h.length) h.push(["No Major Suspicious Moment", "No strong anomaly detected.", "mid"]);
+
+            document.getElementById("highlightGrid").innerHTML = h.slice(0, 4).map(x =>
+                `<div class="item"><strong>${x[0]}</strong><p class="muted">${x[1]}</p><span class="sev ${x[2]}">${x[2]=="high"?"Critical":"Warning"}</span></div>`
+            ).join("");
+        }
+
+        function renderTimeline(score) {
+            const arr = [
+                ["Phase 1", "Session Started", `Login recorded for ${user}`],
+                ["Phase 2", "Typing Captured", "Typing speed, delay, and corrections measured."],
+                ["Phase 3", "Mouse Checked", "Cursor speed, path, and realism checked."],
+                ["Phase 4", "Reaction Analyzed", "Reaction timing and early click tested."],
+                ["Phase 5", "Trust Computed", `Session trust settled at ${score}.`],
+                ["Phase 6", "Highlights Generated", "Top suspicious moments extracted."]
+            ];
+            document.getElementById("timeline").innerHTML = arr.map(x =>
+                `<div class="item"><strong>${x[0]} - ${x[1]}</strong><br><span class="muted">${x[2]}</span></div>`
+            ).join("");
+        }
+
+        function renderFeed(events) {
+            const list = [{
+                label: "Login Session Created",
+                source: "Login Page",
+                severity: "Normal",
+                reason: "A new session started."
+            }, ...events];
+            document.getElementById("feed").innerHTML = list.map(e => `
+    <tr>
+      <td><strong>${e.label}</strong></td>
+      <td>${e.source}</td>
+      <td><span class="tag ${e.severity=="Critical"?"high":e.severity=="Warning"?"mid":"low"}">${e.severity}</span></td>
+      <td>${e.reason}</td>
+    </tr>
+  `).join("");
+        }
+
+        function init() {
+            document.getElementById("fill").style.width = "0%";
+            const d = decay();
+            renderTrust(d);
+            renderStats(d);
+            renderDrift(d.trust);
+            renderHighlights();
+            renderTimeline(d.trust);
+            renderFeed(d.events);
+        }
+
+        function refreshPage() {
+            init();
+        }
+        init();
+    </script>
+</body>
+
+</html>

@@ -258,7 +258,7 @@
                 <li class="active"><a href="behavior.html">Behavior Analysis</a></li>
                 <li><a href="risk.html">Risk Reports</a></li>
                 <li><a href="activity.html">User Activity</a></li>
-                <li><a href="index.html">Logout</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
             </ul>
         </div>
 
@@ -338,6 +338,10 @@
     </div>
 
     <script>
+        // 🔐 CHECK LOGIN
+        if (!localStorage.getItem("userLoggedIn")) {
+            window.location.href = "index.html";
+        }
         const sentencePool = [
             "Behavioral biometrics helps identify users through typing rhythm, mouse movement, and interaction patterns.",
             "Human users usually make small mistakes, natural pauses, and uneven cursor movements while interacting online.",
@@ -880,6 +884,11 @@
 
         loadRandomSentence();
         randomTargetPosition();
+
+        function logout() {
+            localStorage.removeItem("userLoggedIn");
+            window.location.href = "index.html";
+        }
     </script>
 </body>
 
